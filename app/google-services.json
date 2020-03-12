@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "684942677401",
+    "firebase_url": "https://orange-juice-ceaec.firebaseio.com",
+    "project_id": "orange-juice-ceaec",
+    "storage_bucket": "orange-juice-ceaec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684942677401:android:1e1f5ea7104fa2c21daf08",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684942677401-pkarfoes4jddtmu27rqrmo5htk663eu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6dOsm6-LMtA5ESK-yTy5Q-SW56_Q2WHE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "684942677401-pkarfoes4jddtmu27rqrmo5htk663eu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
