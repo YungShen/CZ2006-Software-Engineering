@@ -5,4 +5,8 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="food_photo_list_padding">16dp</dimen>
+    <dimen name="food_photo_list_height">300dp</dimen>
+    <dimen name="vertical_scrollview_padding">16dp</dimen>
+    <dimen name="horizontal_divider_padding">8dp</dimen>
 </resources>
