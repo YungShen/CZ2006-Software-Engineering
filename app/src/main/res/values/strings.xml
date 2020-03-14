@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="button_upvote">Upvote</string>
+    <string name="button_downvote">Downvote</string>
+    <string name="restaurant_name_default">Kentucky Fried Chicken</string>
+    <string name="restaurant_category_default">Chicken Rice</string>
+    <string name="restaurant_pricing_and_distance_default">$$ | 300m away</string>
+    <string name="restaurant_address_default">Block 34, Nanyang Street 42, #01-011</string>
+    <string name="restaurant_contact_default">www.kfc.com.sg</string>
+    <string name="restaurant_opening_hours_default">11am-9pm</string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -90,4 +99,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
