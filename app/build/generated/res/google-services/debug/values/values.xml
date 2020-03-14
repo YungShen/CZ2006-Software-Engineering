@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">684942677401-pkarfoes4jddtmu27rqrmo5htk663eu2.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://orange-juice-ceaec.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">684942677401</string>
+    <string name="google_api_key" translatable="false">AIzaSyD6dOsm6-LMtA5ESK-yTy5Q-SW56_Q2WHE</string>
+    <string name="google_app_id" translatable="false">1:684942677401:android:1e1f5ea7104fa2c21daf08</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD6dOsm6-LMtA5ESK-yTy5Q-SW56_Q2WHE</string>
+    <string name="google_storage_bucket" translatable="false">orange-juice-ceaec.appspot.com</string>
+    <string name="project_id" translatable="false">orange-juice-ceaec</string>
+</resources>

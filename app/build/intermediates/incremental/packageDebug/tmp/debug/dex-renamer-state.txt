@@ -1,0 +1,4 @@
+#Sat Mar 14 12:17:29 SGT 2020
+base.0=C\:\\Users\\wongy\\Desktop\\CZ2006\\the-true-repository\\app\\build\\intermediates\\dex\\debug\\out\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
