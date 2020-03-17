@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="109dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RelativeLayout
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fooder"
+                android:textSize="25pt"
+                android:textColor="#FFFF"
+                android:layout_alignParentTop="true"
+                android:gravity="center"/>
+
+        </RelativeLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginLeft="0dp"/>
+
+    <!--<FrameLayout android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/SettingsButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        <ImageView android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/Settings_Icon"
+            android:layout_marginTop="120dp"
+            android:layout_marginLeft="10dp"/>
+    </FrameLayout>
+
+    &lt;!&ndash;<ImageButton android:id="@+id/imageButton1"
+        android:src="@drawable/Settings_Icon"
+        android:layout_height="40dp"
+        android:layout_width="40dp"/>&ndash;&gt;-->
+
+    <ImageView
+        android:src="@drawable/settings_icon"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <ImageView
+        android:src="@drawable/shortlist_icon"
+        android:layout_marginTop="123dp"
+        android:layout_marginLeft="262dp"
+        android:layout_width="150dp"
+        android:layout_height="40dp"/>
+
+    <ImageView
+        android:src="@drawable/location_pin"
+        android:layout_marginTop="185dp"
+        android:layout_marginLeft="30dp"
+        android:layout_width="50dp"
+        android:layout_height="30dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="50 Nanyang Avenue Singapore 639798"
+        android:textSize="7pt"
+        android:textColor="#000"
+        android:layout_marginTop="190dp"
+        android:layout_marginLeft="73dp"/>
+
+    <ImageView
+        android:src="@drawable/kfc_image"
+        android:layout_marginTop="228dp"
+        android:layout_marginLeft="55dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kentucky Fried Chicken"
+        android:textSize="9pt"
+        android:textColor="#000"
+        android:layout_marginTop="533dp"
+        android:layout_marginLeft="55dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="300m away"
+        android:textSize="7pt"
+        android:textColor="#000"
+        android:layout_marginTop="562dp"
+        android:layout_marginLeft="55dp"/>
+
+    <ImageView
+        android:src="@drawable/tinder_icons"
+        android:layout_marginTop="610dp"
+        android:layout_marginLeft="25dp"
+        android:layout_width="360dp"
+        android:layout_height="100dp"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
