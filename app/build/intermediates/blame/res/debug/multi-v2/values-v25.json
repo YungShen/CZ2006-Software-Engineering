@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\ricks\\StudioProjects\\the-true-repository-2\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v25\\values-v25.xml",
+            "outputFile": "C:\\Users\\behwe\\OrangeJuice\\the-true-repository\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v25\\values-v25.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\ricks\\.gradle\\caches\\transforms-2\\files-2.1\\033008e5b08c086c5dea5ee131934542\\appcompat-1.1.0\\res\\values-v25\\values-v25.xml",
+                    "source": "C:\\Users\\behwe\\.gradle\\caches\\transforms-2\\files-2.1\\033008e5b08c086c5dea5ee131934542\\appcompat-1.1.0\\res\\values-v25\\values-v25.xml",
                     "from": {
                         "startLines": "2,3,4,6",
                         "startColumns": "4,4,4,4",
