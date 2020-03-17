@@ -1,10 +1,4 @@
-#Tue Mar 17 10:58:04 SGT 2020
-path.2=classes2.dex
-path.1=classes.dex
-path.0=classes.dex
-renamed.2=classes3.dex
-renamed.1=classes2.dex
+#Tue Mar 17 10:46:15 SGT 2020
+base.0=C\:\\Users\\wongy\\Desktop\\CZ2006\\the-true-repository\\app\\build\\intermediates\\dex\\debug\\out\\classes.dex
 renamed.0=classes.dex
-base.2=C\:\\Users\\ricks\\StudioProjects\\the-true-repository-2\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\out\\classes2.dex
-base.1=C\:\\Users\\ricks\\StudioProjects\\the-true-repository-2\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\out\\classes.dex
-base.0=C\:\\Users\\ricks\\StudioProjects\\the-true-repository-2\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\out\\classes.dex
+path.0=classes.dex
