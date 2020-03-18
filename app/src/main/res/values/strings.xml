@@ -8,6 +8,10 @@
     <string name="restaurant_address_default">Block 34, Nanyang Street 42, #01-011</string>
     <string name="restaurant_contact_default">www.kfc.com.sg</string>
     <string name="restaurant_opening_hours_default">11am-9pm</string>
+    <string name="button_direction">Directions</string>
+    <string name="button_reservation">Reservation</string>
+    <string name="button_facebook">Share To Facebook</string>
+    <string name="button_whatsapp">Share To WhatsApp</string>
 
     <string name="large_text">
         "Material is the metaphor.\n\n"
