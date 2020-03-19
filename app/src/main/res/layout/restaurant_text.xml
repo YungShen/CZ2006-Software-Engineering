@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/RestaurantName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_name_default" />
+
+    <TextView
+        android:id="@+id/RestaurantCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_category_default" />
+
+    <RatingBar
+        android:id="@+id/RestaurantRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:numStars="5"
+        android:rating="3.7" />
+
+    <TextView
+        android:id="@+id/RestaurantPricingAndDistance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_pricing_and_distance_default" />
+
+    <TextView
+        android:id="@+id/RestaurantOpeningHours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_opening_hours_default" />
+
+    <TextView
+        android:id="@+id/RestaurantAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_address_default" />
+
+    <TextView
+        android:id="@+id/RestaurantContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/restaurant_contact_default" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/horizontal_divider_padding"
+        android:layout_marginBottom="@dimen/horizontal_divider_padding"
+        android:background="?android:attr/listDivider" />
+
+
+</LinearLayout>

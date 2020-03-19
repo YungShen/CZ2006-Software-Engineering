@@ -3,13 +3,22 @@ package com.example.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 
-class History : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_history)
+        setContentView(R.layout.settings_page_2)
         actionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun saveSettings(view: View){
+        // save
+    }
+
+    fun logout(view: View){
+        // logout
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
