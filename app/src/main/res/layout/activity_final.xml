@@ -9,14 +9,14 @@
         android:orientation="vertical"
         tools:context=".FinalActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/FinalToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:menu="@menu/menu_final" />
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/FinalToolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="?attr/colorPrimary"-->
+<!--            android:minHeight="?attr/actionBarSize"-->
+<!--            android:theme="?attr/actionBarTheme"-->
+<!--            app:menu="@menu/menu_final" />-->
 
         <fragment
         android:id="@+id/fragment2"

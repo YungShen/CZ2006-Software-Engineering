@@ -3,14 +3,14 @@ package com.example.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 
-class FinalActivity : AppCompatActivity() {
+class SetLocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_final)
+        setContentView(R.layout.activity_set_location)
         actionBar?.setDisplayHomeAsUpEnabled(true)
-//        setSupportActionBar(findViewById(R.id.FinalToolbar))
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
