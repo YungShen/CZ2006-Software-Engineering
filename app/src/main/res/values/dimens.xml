@@ -9,4 +9,8 @@
     <dimen name="food_photo_list_height">300dp</dimen>
     <dimen name="vertical_scrollview_padding">16dp</dimen>
     <dimen name="horizontal_divider_padding">8dp</dimen>
+    <dimen name="small_margin">3dp</dimen>
+    <dimen name="medium_margin">10dp</dimen>
+    <dimen name="big_margin">20dp</dimen>
+    <dimen name="one_line_list_item_height">40dp</dimen>
 </resources>
