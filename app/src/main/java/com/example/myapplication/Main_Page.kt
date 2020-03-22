@@ -1,13 +1,15 @@
 package com.example.myapplication
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+
 
 class Main_Page : AppCompatActivity() {
 
@@ -30,11 +32,36 @@ class Main_Page : AppCompatActivity() {
         val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
         startActivity(intent)
     }
-
+    //database call
+    val database = Firebase.database
+    val myRef = database.getReference("message")
     fun toDetails(view: View){
         val intent = Intent(this, ScrollingActivity::class.java)
         startActivity(intent)
     }
+
+    fun databaseTest(view: View){
+        // Write a message to the database
+        myRef.setValue("Message test 2")
+    }
+
+    fun databaseRead(view: View){
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue()
+                println(value)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+
+            }
+        })
+    }
+
+
 
 //    override fun onOptionsItemSelected(item: MenuItem?) = when(item?.itemId){
 //        R.id.SettingsButton -> {
@@ -45,5 +72,6 @@ class Main_Page : AppCompatActivity() {
 //            super.onOptionsItemSelected(item)
 //        }
 //    }
+
 
 }

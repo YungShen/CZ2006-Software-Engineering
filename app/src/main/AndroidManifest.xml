@@ -24,7 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main_Page"/>
+        <activity
+            android:name=".Main_Page"
+            android:exported="true" />
         <activity
             android:name=".SetLocationActivity"
             android:parentActivityName=".Main_Page"/>
@@ -42,5 +44,6 @@
             android:exported="true"
             android:parentActivityName=".ShortlistedRestaurantsActivity"/>
     </application>
+
 
 </manifest>
