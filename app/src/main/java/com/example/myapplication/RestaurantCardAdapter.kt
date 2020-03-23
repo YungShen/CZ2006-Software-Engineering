@@ -68,7 +68,7 @@ class CardStackAdapter(
             .load(restaurant.url)
             .into(holder.photo)
         holder.itemView.setOnClickListener {
-            v -> v.context.startActivity(Intent(v.context, ShortlistedRestaurantsActivity::class.java))
+            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java))
         }
     }
 
@@ -76,11 +76,11 @@ class CardStackAdapter(
         return restaurants.size
     }
 
-    fun setSpots(spots: List<Restaurant>) {
-        this.restaurants = spots
+    fun setRestaurants(restaurants: List<Restaurant>) {
+        this.restaurants = restaurants
     }
 
-    fun getSpots(): List<Restaurant> {
+    fun getRestaurants(): List<Restaurant> {
         return restaurants
     }
 

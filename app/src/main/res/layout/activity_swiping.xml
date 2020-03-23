@@ -28,7 +28,6 @@
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:onClick="toShortlisted"
         android:text="Shortlisted" />
 
     <Button
@@ -42,7 +41,6 @@
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:onClick="toSettings"
         android:text="@string/action_settings" />
 
     <LinearLayout
@@ -57,7 +55,6 @@
         android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
         android:clickable="true"
-        android:onClick="toSetLocation"
         android:orientation="horizontal">
 
         <ImageView
@@ -77,52 +74,22 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/RestaurantCard"
+    <com.yuyakaido.android.cardstackview.CardStackView
+        android:id="@+id/card_stack_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@id/ShortlistButtonRow"
         android:layout_below="@id/LocationClickable"
-        android:layout_marginStart="@dimen/big_margin"
-        android:layout_marginLeft="@dimen/big_margin"
-        android:layout_marginTop="@dimen/big_margin"
-        android:layout_marginEnd="@dimen/big_margin"
-        android:layout_marginRight="@dimen/big_margin"
-        android:layout_marginBottom="@dimen/big_margin"
-        android:clickable="true"
-        android:onClick="toDetails"
-        app:cardBackgroundColor="@color/colorHint">
+        android:clipToPadding="false"
+        android:padding="4dp"></com.yuyakaido.android.cardstackview.CardStackView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/medium_margin"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/RestaurantName"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.9"
-                android:text="@string/restaurant_name_default"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/RestaurantPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/kfc_image" />
-
-            <TextView
-                android:id="@+id/RestaurantDistance"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.9"
-                android:text="300m away" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+<!--    <include-->
+<!--        layout="@layout/item_restaurant_card"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@id/ShortlistButtonRow"-->
+<!--        android:layout_below="@id/LocationClickable"-->
+<!--        />-->
 
     <LinearLayout
         android:id="@+id/ShortlistButtonRow"
@@ -149,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="databaseTest"
             app:srcCompat="@android:drawable/ic_menu_compass" />
 
         <ImageButton
@@ -156,6 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="databaseRead"
             app:srcCompat="@android:drawable/ic_input_add" />
     </LinearLayout>
 

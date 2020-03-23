@@ -84,8 +84,8 @@
 
     <ImageButton
         android:id="@+id/save"
-        android:layout_width="114dp"
-        android:layout_height="101dp"
+        android:layout_width="112dp"
+        android:layout_height="99dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.73"
