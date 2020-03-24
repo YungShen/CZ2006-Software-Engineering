@@ -62,8 +62,8 @@ class CardStackAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val restaurant = restaurants[position]
-        holder.name.text = "${restaurant.id}. ${restaurant.name}"
-        holder.distance.text = restaurant.distance.toString()
+        holder.name.text = restaurant.name
+        holder.distance.text = "${restaurant.distance}m"
         Glide.with(holder.photo)
             .load(restaurant.url)
             .into(holder.photo)
