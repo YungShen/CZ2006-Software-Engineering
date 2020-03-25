@@ -15,7 +15,6 @@ class SettingsActivity : AppCompatActivity() {
 
     fun saveSettings(view: View){
         // save
-        //should redirect to main page
     }
 
     fun logout(view: View){

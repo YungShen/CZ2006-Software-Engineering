@@ -36,6 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="downVote"
                     android:text="@string/button_downvote" />
 
                 <Button
@@ -43,6 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:onClick="upVote"
                     android:text="@string/button_upvote" />
             </LinearLayout>
 
