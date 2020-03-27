@@ -43,6 +43,9 @@
             android:name=".FinalActivity"
             android:exported="true"
             android:parentActivityName=".ShortlistedRestaurantsActivity"/>
+        <activity
+            android:name=".History"
+            android:parentActivityName=".ShortlistedRestaurantsActivity"/>
     </application>
 
 

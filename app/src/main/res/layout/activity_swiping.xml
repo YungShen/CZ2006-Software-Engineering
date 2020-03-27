@@ -43,9 +43,9 @@
         android:layout_marginBottom="@dimen/medium_margin"
         android:text="@string/action_settings" />
 
-    <LinearLayout
-        android:id="@+id/LocationClickable"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/SetLocationCard"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ViewShortlistedButton"
         android:layout_marginStart="@dimen/medium_margin"
@@ -55,31 +55,45 @@
         android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
         android:clickable="true"
-        android:orientation="horizontal">
+        app:cardCornerRadius="5dp">
 
-        <ImageView
-            android:id="@+id/LocationPinImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            app:srcCompat="@drawable/location_pin" />
-
-        <TextView
-            android:id="@+id/LocationText"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/LocationClickable"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="@string/restaurant_address_default"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginLeft="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginRight="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/LocationPinImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/location_pin" />
+
+            <TextView
+                android:id="@+id/LocationText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/restaurant_address_default"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <com.yuyakaido.android.cardstackview.CardStackView
         android:id="@+id/card_stack_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/ShortlistButtonRow"
-        android:layout_below="@id/LocationClickable"
+        android:layout_below="@id/SetLocationCard"
         android:clipToPadding="false"
         android:padding="4dp"></com.yuyakaido.android.cardstackview.CardStackView>
 
@@ -102,7 +116,8 @@
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginRight="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="10">
 
         <ImageButton
             android:id="@+id/DiscardButton"
@@ -111,13 +126,13 @@
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_delete" />
 
-        <ImageButton
+        <Button
             android:id="@+id/SuperlikeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="9"
             android:onClick="databaseTest"
-            app:srcCompat="@android:drawable/ic_menu_compass" />
+            android:text="Superlike!" />
 
         <ImageButton
             android:id="@+id/ShortlistButton"

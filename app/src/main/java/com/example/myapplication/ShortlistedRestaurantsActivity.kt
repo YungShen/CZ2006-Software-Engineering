@@ -6,13 +6,30 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class ShortlistedRestaurantsActivity : AppCompatActivity() {
-
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+    private var mockRestaurants= mutableListOf<String>(
+        "KFC",
+        "MCD"
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shortlistedrestaurants)
+//        setSupportActionBar(findViewById(R.id.ShortlistedToolbar))
         actionBar?.setDisplayHomeAsUpEnabled(true)
+        viewManager = LinearLayoutManager(this)
+        viewAdapter = ShortlistedRestaurantAdapter(mockRestaurants)
+        recyclerView = findViewById<RecyclerView>(R.id.ShortlistedRestaurants).apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+
+        }
     }
 
     fun toFinalActivity(view: View) {
@@ -31,6 +48,11 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
             onBackPressed()
             true
         }
+//        R.id.ViewHistory -> {
+//            val intent = Intent(this, History::class.java)
+//            startActivity(intent)
+//            true
+//        }
         else -> {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
@@ -42,6 +64,7 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
     // recycler view adapter
     // recycler view viewholder
     // setListener on recyclerview item?
+
 
     // delete one shortlisted restaurant
     // random pick & startfinalactivity

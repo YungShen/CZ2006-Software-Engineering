@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.yuyakaido.android.cardstackview.*
@@ -141,8 +142,8 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 startActivity(intent)
             }
         )
-        val clickable = findViewById<LinearLayout>(R.id.LocationClickable)
-        clickable.setOnClickListener(
+        val clickableCard = findViewById<CardView>(R.id.SetLocationCard)
+        clickableCard.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, SetLocationActivity::class.java)
                 startActivity(intent)
@@ -175,10 +176,11 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             manager.setSwipeAnimationSetting(setting)
             cardStackView.swipe()
         }
-        imageButton = findViewById<ImageButton>(R.id.SuperlikeButton)
-        imageButton.setOnClickListener {
+        button = findViewById<Button>(R.id.SuperlikeButton)
+        button.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
                 .setDirection(Direction.Top)
+
                 .setDuration(Duration.Normal.duration)
                 .setInterpolator(AccelerateInterpolator())
                 .build()

@@ -9,7 +9,7 @@
     tools:context=".ShortlistedRestaurantsActivity">
 
 <!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/ShortlsitToolbar"-->
+<!--        android:id="@+id/ShortlistedToolbar"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:background="?attr/colorPrimary"-->
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
-        tools:listitem="@layout/shortlisted_item" >
+        tools:listitem="@layout/shortlisted_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 

@@ -17,17 +17,16 @@
         android:layout_marginEnd="@dimen/small_margin"
         android:layout_marginRight="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin"
-        android:layout_toStartOf="@id/TrashbinButton_One"
-        android:layout_toLeftOf="@id/TrashbinButton_One"
+        android:layout_toStartOf="@id/TrashbinButton"
+        android:layout_toLeftOf="@id/TrashbinButton"
         android:background="@color/design_default_color_background"
         android:clickable="true"
-        android:onClick="toFinalActivity"
         android:text="KFC"
         android:textSize="24sp"
         android:textStyle="bold" />
 
     <ImageButton
-        android:id="@+id/TrashbinButton_One"
+        android:id="@+id/TrashbinButton"
         android:layout_width="@dimen/one_line_list_item_height"
         android:layout_height="@dimen/one_line_list_item_height"
         android:layout_alignParentTop="true"
