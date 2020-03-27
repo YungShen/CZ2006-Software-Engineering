@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -13,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 
 import android.view.animation.LinearInterpolator
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -139,7 +141,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 startActivity(intent)
             }
         )
-        var clickable = findViewById<LinearLayout>(R.id.LocationClickable)
+        val clickable = findViewById<LinearLayout>(R.id.LocationClickable)
         clickable.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, SetLocationActivity::class.java)
@@ -153,6 +155,37 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 startActivity(intent)
             }
         )
+        var imageButton = findViewById<ImageButton>(R.id.DiscardButton)
+        imageButton.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Left)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            cardStackView.swipe()
+        }
+        imageButton = findViewById<ImageButton>(R.id.ShortlistButton)
+        imageButton.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Right)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            cardStackView.swipe()
+        }
+        imageButton = findViewById<ImageButton>(R.id.SuperlikeButton)
+        imageButton.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Top)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            cardStackView.swipe()
+        }
+
     }
 
     //database call
