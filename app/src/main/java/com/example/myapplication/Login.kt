@@ -1,9 +1,9 @@
 package com.example.myapplication
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 
 class Login : AppCompatActivity() {
 
@@ -14,10 +14,6 @@ class Login : AppCompatActivity() {
 
     fun authenticateUser(view: View){
         //some checks
-
-        //if authentication successful
-        //retrieve user settings
-
         toMainPage(view)
     }
 
