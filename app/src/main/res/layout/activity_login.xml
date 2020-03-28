@@ -31,7 +31,7 @@
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:padding="5dp"
-        android:textColor="@color/colorInput"
+        android:textColor="#474545"
         android:textColorHint="@color/colorHint"
         android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
