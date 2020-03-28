@@ -12,6 +12,7 @@ class SettingsActivity : AppCompatActivity() {
     private var halal = false
     private var veg = false
     private var distance = 1000
+    private val minProgress = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +32,12 @@ class SettingsActivity : AppCompatActivity() {
         seek?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             val radiusValue = findViewById<TextView>(R.id.DistanceValue)
             override fun onProgressChanged(seek: SeekBar?, progress: Int, fromUser: Boolean) {
-                distance = progress*1000
-                radiusValue.text = distance.toString()
+                if(progress < minProgress){
+                    seek?.progress = minProgress
+                }else{
+                    distance = progress*1000
+                    radiusValue.text = distance.toString()
+                }
             }
             override fun onStartTrackingTouch(seek: SeekBar?) {}
             override fun onStopTrackingTouch(seek: SeekBar) {}

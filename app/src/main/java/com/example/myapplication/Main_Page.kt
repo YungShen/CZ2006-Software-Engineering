@@ -5,42 +5,68 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.LinearInterpolator
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DiffUtil
+import com.android.volley.RequestQueue
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-
-import android.view.animation.LinearInterpolator
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DiffUtil
 import com.yuyakaido.android.cardstackview.*
+
+data class Restaurant(
+    val place_id: String,
+    val name: String,
+    val url: String,
+    val latitude: Double,
+    val longitude: Double,
+    val address: String,
+    val price_level: Int,
+    val rating: Double,
+    val user_ratings_total: Int,
+    val opening_now: Boolean
+)
 
 class Main_Page : AppCompatActivity(), CardStackListener {
 
     // mock list of restaurants
-    private val mockRestaurants = listOf(
-        Restaurant(name="KFC", distance=300.1, url="https://media-cdn.tripadvisor.com/media/photo-s/0f/b2/5f/35/this-is-what-kfc-is-famous.jpg"),
-        Restaurant(name="Pizza Hut", distance=300.1, url="https://imgix.bustle.com/uploads/image/2019/4/9/e5e17083-273e-40f5-91cf-63a5ca339e99-ea3557c8-71a1-48e8-967f-4c166054baab-pizza-image_no-text.jpg?w=1020&h=574&fit=crop&crop=faces&auto=format&q=70"),
-        Restaurant(name="Subway", distance=299.3, url="https://www.subway.com/~/media/Base_English/Images/FooterButtons/footer_popup-menu_group.jpg?la=en-SG&hash=06CEB4EF8DA4CDD18EF4D18E9A71098804A5A704"),
-        Restaurant(name="Starbucks", distance=299.9, url="https://assets.grab.com/wp-content/uploads/sites/4/2019/03/14182747/starbucks-delivery-singapore-grabfood-700x700.jpg"),
-        Restaurant(name="McDonald's", distance=299.2, url="https://image.shutterstock.com/image-photo/russia-saintpetersburg-december-24-2018-260nw-1265992426.jpg")
-    )
+//    private val mockRestaurants = listOf(
+//        Restaurant(name="KFC", url="https://media-cdn.tripadvisor.com/media/photo-s/0f/b2/5f/35/this-is-what-kfc-is-famous.jpg"),
+//        Restaurant(name="Pizza Hut", url="https://imgix.bustle.com/uploads/image/2019/4/9/e5e17083-273e-40f5-91cf-63a5ca339e99-ea3557c8-71a1-48e8-967f-4c166054baab-pizza-image_no-text.jpg?w=1020&h=574&fit=crop&crop=faces&auto=format&q=70"),
+//        Restaurant(name="Subway", url="https://www.subway.com/~/media/Base_English/Images/FooterButtons/footer_popup-menu_group.jpg?la=en-SG&hash=06CEB4EF8DA4CDD18EF4D18E9A71098804A5A704"),
+//        Restaurant(name="Starbucks", url="https://assets.grab.com/wp-content/uploads/sites/4/2019/03/14182747/starbucks-delivery-singapore-grabfood-700x700.jpg"),
+//        Restaurant(name="McDonald's", url="https://image.shutterstock.com/image-photo/russia-saintpetersburg-december-24-2018-260nw-1265992426.jpg")
+//    )
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
-    private val adapter by lazy { CardStackAdapter(mockRestaurants) }
+    private val adapter by lazy { CardStackAdapter() }
+    private lateinit var mQueue : RequestQueue
+
+    // both of these store place_id string
+    private var viewedRestaurants = mutableListOf<String>()
+    private var shortlistedRestaurants = mutableListOf<Restaurant>()
+    private var currentRestaurants = mutableListOf<Restaurant>()
+
+    private fun setRestaurantCallback(){
+        adapter.setRestaurants(currentRestaurants)
+        cardStackView.adapter?.notifyDataSetChanged()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiping)
-        setupCardStackView()
         setupButtons()
+        setupCardStackView()
+
+        mQueue = SingletonObjects.getInstance(this).requestQueue
+        mQueue.add(APIHelper.nearbyPlacesRequest(currentRestaurants) { setRestaurantCallback() })
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
@@ -48,6 +74,9 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     }
 
     override fun onCardSwiped(direction: Direction) {
+//        if(direction == Direction.Right){
+//            shortlistedRestaurants.add(adapter.getRestaurants()[0])
+//        }
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
         if (manager.topPosition == adapter.itemCount - 4) {
             paginate()
@@ -73,10 +102,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     }
 
     private fun setupCardStackView() {
-        initialize()
-    }
-
-    private fun initialize() {
         manager.setStackFrom(StackFrom.None)
         manager.setVisibleCount(3)
         manager.setTranslationInterval(8.0f)
@@ -99,7 +124,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     private fun paginate() {
         val old = adapter.getRestaurants()
-        val new = old.plus(mockRestaurants)
+        val new = old.plus(currentRestaurants)
         val callback = SpotDiffCallback(old, new)
         val result = DiffUtil.calculateDiff(callback)
         adapter.setRestaurants(new)
@@ -108,7 +133,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     private fun reload() {
         val old = adapter.getRestaurants()
-        val new = mockRestaurants
+        val new = currentRestaurants
         val callback = SpotDiffCallback(old, new)
         val result = DiffUtil.calculateDiff(callback)
         adapter.setRestaurants(new)
@@ -158,34 +183,40 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         )
         var imageButton = findViewById<ImageButton>(R.id.DiscardButton)
         imageButton.setOnClickListener {
-            val setting = SwipeAnimationSetting.Builder()
-                .setDirection(Direction.Left)
-                .setDuration(Duration.Normal.duration)
-                .setInterpolator(AccelerateInterpolator())
-                .build()
-            manager.setSwipeAnimationSetting(setting)
-            cardStackView.swipe()
+            if(cardStackView.adapter?.itemCount != 0){
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Left)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                cardStackView.swipe()
+            }
         }
         imageButton = findViewById<ImageButton>(R.id.ShortlistButton)
         imageButton.setOnClickListener {
-            val setting = SwipeAnimationSetting.Builder()
-                .setDirection(Direction.Right)
-                .setDuration(Duration.Normal.duration)
-                .setInterpolator(AccelerateInterpolator())
-                .build()
-            manager.setSwipeAnimationSetting(setting)
-            cardStackView.swipe()
+            if(cardStackView.adapter?.itemCount != 0){
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Right)
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                cardStackView.swipe()
+            }
         }
         button = findViewById<Button>(R.id.SuperlikeButton)
         button.setOnClickListener {
-            val setting = SwipeAnimationSetting.Builder()
-                .setDirection(Direction.Top)
+            if(cardStackView.adapter?.itemCount != 0){
+                val setting = SwipeAnimationSetting.Builder()
+                    .setDirection(Direction.Top)
 
-                .setDuration(Duration.Normal.duration)
-                .setInterpolator(AccelerateInterpolator())
-                .build()
-            manager.setSwipeAnimationSetting(setting)
-            cardStackView.swipe()
+                    .setDuration(Duration.Normal.duration)
+                    .setInterpolator(AccelerateInterpolator())
+                    .build()
+                manager.setSwipeAnimationSetting(setting)
+                cardStackView.swipe()
+            }
         }
 
     }

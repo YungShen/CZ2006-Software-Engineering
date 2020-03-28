@@ -29,7 +29,7 @@ class SpotDiffCallback(
     }
 
     override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return old[oldPosition].id == new[newPosition].id
+        return old[oldPosition].place_id == new[newPosition].place_id
     }
 
     override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
@@ -39,17 +39,6 @@ class SpotDiffCallback(
 }
 // not sure what above code is for
 
-
-data class Restaurant(
-    val id: Long = counter++,
-    val name: String,
-    val distance: Double,
-    val url: String
-) {
-    companion object {
-        private var counter = 0L
-    }
-}
 
 class CardStackAdapter(
     private var restaurants: List<Restaurant> = emptyList()
@@ -63,7 +52,6 @@ class CardStackAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val restaurant = restaurants[position]
         holder.name.text = restaurant.name
-        holder.distance.text = "${restaurant.distance}m"
         Glide.with(holder.photo)
             .load(restaurant.url)
             .into(holder.photo)
@@ -86,7 +74,6 @@ class CardStackAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.item_name)
-        var distance: TextView = view.findViewById(R.id.item_distance)
         var photo: ImageView = view.findViewById(R.id.item_image)
     }
 
