@@ -223,34 +223,19 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     }
 
-    //database call
     val database = Firebase.database
-    val myRef = database.getReference("message")
-    fun toDetails(view: View){
-        val intent = Intent(this, ScrollingActivity::class.java)
-        startActivity(intent)
+    val databaseUR = database.getReference("UsersRestaurant")
+
+    //function to add restaurant to shortlist
+    fun shortlistRestaurant(resId: String){
+        val key: String? = databaseUR.push().key
+        databaseUR.child(mySettings.uid).child("Shortlist").child(key!!).setValue(resId)
+        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
     }
 
-    fun databaseTest(view: View){
-        // Write a message to the database
-        myRef.setValue("Message test 2")
+    fun rejectRestaurant(resId: String){
+        val key: String? = databaseUR.push().key
+        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
     }
-
-    fun databaseRead(view: View){
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value = dataSnapshot.getValue()
-                println(value)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-
-            }
-        })
-    }
-
 
 }
