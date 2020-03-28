@@ -64,7 +64,7 @@ class CardStackAdapter(
             .load(restaurant.url)
             .into(holder.photo)
         holder.itemView.setOnClickListener {
-            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java).putExtra("restaurant_to_pass",restaurant )
+            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java).putExtra("restaurant_to_pass",restaurant)
         )
 
         }

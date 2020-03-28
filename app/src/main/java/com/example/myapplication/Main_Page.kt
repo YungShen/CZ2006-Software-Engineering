@@ -70,12 +70,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_swiping)
         setupButtons()
         setupCardStackView()
 
         mQueue = SingletonObjects.getInstance(this).requestQueue
         mQueue.add(APIHelper.nearbyPlacesRequest(currentRestaurants) { setRestaurantCallback() })
+        val userAddress = intent.getStringExtra("user_address")
+        val textView: TextView = findViewById<TextView>(R.id.LocationText)
+        textView.text = userAddress
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
@@ -189,7 +193,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
-                intent.putExtra("restaurant_list_to_pass",shortlistedRestaurants )
+                intent.putExtra("restaurant_list_to_pass",shortlistedRestaurants)
                 startActivity(intent)
             }
         )

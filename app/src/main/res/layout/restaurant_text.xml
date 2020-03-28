@@ -10,11 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/restaurant_name_default" />
 
-    <TextView
-        android:id="@+id/RestaurantCategory"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/restaurant_category_default" />
+
 
     <RatingBar
         android:id="@+id/RestaurantRating"
@@ -26,7 +22,7 @@
         android:rating="3.7" />
 
     <TextView
-        android:id="@+id/RestaurantPricingAndDistance"
+        android:id="@+id/RestaurantPricing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/restaurant_pricing_and_distance_default" />
@@ -43,19 +39,9 @@
         android:layout_height="wrap_content"
         android:text="@string/restaurant_address_default" />
 
-    <TextView
-        android:id="@+id/RestaurantContacts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/restaurant_contact_default" />
 
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/horizontal_divider_padding"
-        android:layout_marginBottom="@dimen/horizontal_divider_padding"
-        android:background="?android:attr/listDivider" />
+
+
 
 
 </LinearLayout>
