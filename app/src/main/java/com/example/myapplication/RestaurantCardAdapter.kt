@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide
 
 // not sure what is this for
 import androidx.recyclerview.widget.DiffUtil
+import java.io.Serializable
 
 class SpotDiffCallback(
     private val old: MutableList<Restaurant>,
@@ -50,13 +52,21 @@ class CardStackAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+
+
         val restaurant = restaurants[position]
+
+        //send restaurant from here
+
         holder.name.text = restaurant.name
         Glide.with(holder.photo)
             .load(restaurant.url)
             .into(holder.photo)
         holder.itemView.setOnClickListener {
-            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java))
+            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java).putExtra("restaurant_to_pass",restaurant )
+        )
+
         }
     }
 
