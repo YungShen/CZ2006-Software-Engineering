@@ -19,7 +19,9 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var shortlistedrestaurants = getIntent().getSerializableExtra("restaurant_list_to_pass")
         setContentView(R.layout.activity_shortlistedrestaurants)
+
 //        setSupportActionBar(findViewById(R.id.ShortlistedToolbar))
         actionBar?.setDisplayHomeAsUpEnabled(true)
         viewManager = LinearLayoutManager(this)

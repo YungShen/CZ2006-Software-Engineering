@@ -53,7 +53,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     // both of these store place_id string
     private var viewedRestaurants = mutableListOf<String>()
-    private var shortlistedRestaurants = mutableListOf<Restaurant>()
+    private var shortlistedRestaurants = ArrayList<Restaurant>()
     private var currentRestaurants = mutableListOf<Restaurant>()
 
 
@@ -189,6 +189,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
+                intent.putExtra("restaurant_list_to_pass",shortlistedRestaurants )
                 startActivity(intent)
             }
         )

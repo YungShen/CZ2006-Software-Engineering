@@ -15,9 +15,10 @@ class ScrollingActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         var restaurant = getIntent().getSerializableExtra("restaurant_to_pass")
-        Log.d("Passdata", "Obeject received $restaurant")
+
         setContentView(R.layout.activity_scrolling)
         actionBar?.setDisplayHomeAsUpEnabled(true)
+
 
     }
 

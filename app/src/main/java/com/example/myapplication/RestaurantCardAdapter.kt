@@ -56,7 +56,7 @@ class CardStackAdapter(
 
 
         val restaurant = restaurants[position]
-        Log.d("Passdata", "Obeject received $restaurant")
+
         //send restaurant from here
 
         holder.name.text = restaurant.name
