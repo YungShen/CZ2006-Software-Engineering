@@ -181,7 +181,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         val clickableCard = findViewById<CardView>(R.id.SetLocationCard)
         clickableCard.setOnClickListener(
             View.OnClickListener {
-                val intent = Intent(this, SetLocationActivity::class.java)
+                val intent = Intent(this, MapsActivityCurrentPlace::class.java)
                 startActivity(intent)
             }
         )
