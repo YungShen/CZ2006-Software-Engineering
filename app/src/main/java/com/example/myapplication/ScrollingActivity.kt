@@ -39,7 +39,15 @@ class ScrollingActivity : AppCompatActivity() {
             r_opening.text="Closes"
         }
         val r_pricing = findViewById(R.id.RestaurantPricing) as TextView
-        r_pricing.text="$"+restaurant.price_level.toString()
+        if(restaurant.price_level==-1)
+        {
+            r_pricing.text="Not Applicable"
+        }
+        else
+        {
+            r_pricing.text="$"+restaurant.price_level.toString()
+        }
+
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
 
