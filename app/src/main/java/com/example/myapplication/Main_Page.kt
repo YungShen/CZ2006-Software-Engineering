@@ -74,13 +74,15 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     }
 
     override fun onCardSwiped(direction: Direction) {
-//        if(direction == Direction.Right){
-//            shortlistedRestaurants.add(adapter.getRestaurants()[0])
-//        }
-        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-        if (manager.topPosition == adapter.itemCount - 4) {
-            paginate()
+        if(direction == Direction.Right){
+            shortlistedRestaurants.add(adapter.getRestaurant())
         }
+        viewedRestaurants.add(adapter.getRestaurant().place_id)
+        adapter.removeRestaurant()
+        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
+//        if (manager.topPosition == adapter.itemCount - 4) {
+//            paginate()
+//        }
     }
 
     override fun onCardRewound() {
@@ -125,7 +127,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     private fun paginate() {
         val old = adapter.getRestaurants()
         val new = old.plus(currentRestaurants)
-        val callback = SpotDiffCallback(old, new)
+        val callback = SpotDiffCallback(old, new as MutableList<Restaurant>)
         val result = DiffUtil.calculateDiff(callback)
         adapter.setRestaurants(new)
         result.dispatchUpdatesTo(adapter)

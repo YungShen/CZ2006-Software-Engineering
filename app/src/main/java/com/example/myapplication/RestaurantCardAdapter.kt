@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide
 import androidx.recyclerview.widget.DiffUtil
 
 class SpotDiffCallback(
-    private val old: List<Restaurant>,
-    private val new: List<Restaurant>
+    private val old: MutableList<Restaurant>,
+    private val new: MutableList<Restaurant>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int {
@@ -41,7 +41,7 @@ class SpotDiffCallback(
 
 
 class CardStackAdapter(
-    private var restaurants: List<Restaurant> = emptyList()
+    private var restaurants: MutableList<Restaurant> = mutableListOf()
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -64,12 +64,20 @@ class CardStackAdapter(
         return restaurants.size
     }
 
-    fun setRestaurants(restaurants: List<Restaurant>) {
+    fun setRestaurants(restaurants: MutableList<Restaurant>) {
         this.restaurants = restaurants
     }
 
-    fun getRestaurants(): List<Restaurant> {
+    fun getRestaurants(): MutableList<Restaurant> {
         return restaurants
+    }
+
+    fun getRestaurant(): Restaurant {
+        return restaurants[0]
+    }
+
+    fun removeRestaurant(){
+        restaurants.removeAt(0)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

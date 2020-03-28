@@ -55,6 +55,7 @@ class APIHelper {
                         var price_level : Int = -1
                         var rating : Double = -1.0
                         var user_ratings_total : Int = -1
+
                         var opening_now : Boolean = true
                         if(restaurant.has("price_level")){
                             price_level = restaurant.getInt("price_level")
