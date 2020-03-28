@@ -20,19 +20,21 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.*
+import java.io.Serializable
 
-data class Restaurant(
-    val place_id: String,
-    val name: String,
-    val url: String,
-    val latitude: Double,
-    val longitude: Double,
-    val address: String,
-    val price_level: Int,
-    val rating: Double,
-    val user_ratings_total: Int,
-    val opening_now: Boolean
-)
+
+data class Restaurant(var place_id:String,
+                      val name: String,
+                      val url: String,
+                      val latitude: Double,
+                      val longitude: Double,
+                      val address: String,
+                      val price_level: Int,
+                      val rating: Double,
+                      val user_ratings_total: Int,
+                      val opening_now: Boolean) :Serializable
+
+
 
 class Main_Page : AppCompatActivity(), CardStackListener {
 
@@ -54,10 +56,17 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     private var shortlistedRestaurants = mutableListOf<Restaurant>()
     private var currentRestaurants = mutableListOf<Restaurant>()
 
+
+
+
+
+
+
     private fun setRestaurantCallback(){
         adapter.setRestaurants(currentRestaurants)
         cardStackView.adapter?.notifyDataSetChanged()
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
