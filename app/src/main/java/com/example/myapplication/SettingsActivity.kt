@@ -21,6 +21,8 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_page_2)
+        val distance_value = findViewById(R.id.DistanceValue) as TextView
+        distance_value.text=distance.toString()
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
         val halalSwitch = findViewById<Switch>(R.id.HalalSwitch)
