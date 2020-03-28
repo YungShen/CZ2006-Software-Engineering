@@ -12,7 +12,6 @@
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:background="#405DE6"
-        android:onClick="authenticateUser"
         android:text="@string/login"
         android:textColor="@color/colorInput"
         android:textSize="20dp"
@@ -103,7 +102,7 @@
         app:layout_constraintVertical_bias="0.95" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/SignUpButton"
         android:layout_width="wrap_content"
         android:layout_height="17dp"
         android:clickable="true"
