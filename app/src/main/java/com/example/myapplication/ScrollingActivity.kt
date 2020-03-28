@@ -8,19 +8,23 @@ import android.widget.RatingBar
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 
 
 class ScrollingActivity : AppCompatActivity() {
 
+    lateinit var place_id : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         var restaurant = getIntent().getSerializableExtra("restaurant_to_pass") as Restaurant
+        place_id = restaurant.place_id
 
         Log.d("Passed Object","$restaurant::class")
 
         setContentView(R.layout.activity_scrolling)
+
 
         val r_name = findViewById(R.id.RestaurantName) as TextView
         r_name.text=restaurant.name
@@ -42,21 +46,14 @@ class ScrollingActivity : AppCompatActivity() {
         r_pricing.text="$"+restaurant.price_level.toString()
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-
-
     }
 
-    // vote photo
-    // get more review?
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
             onBackPressed()
             true
         }
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }

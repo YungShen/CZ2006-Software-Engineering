@@ -7,12 +7,33 @@
     android:layout_height="match_parent"
     android:isScrollContainer="false"
     android:orientation="vertical"
-    tools:context=".VotePhoto">
+    tools:context=".ScrollingActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/photo_pager"
         android:layout_width="match_parent"
         android:layout_height="@dimen/food_photo_list_height" />
+
+    <LinearLayout
+        android:id="@+id/ButtonRow"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/DownvoteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_downvote" />
+
+        <Button
+            android:id="@+id/UpvoteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/button_upvote" />
+    </LinearLayout>
 
 </LinearLayout>

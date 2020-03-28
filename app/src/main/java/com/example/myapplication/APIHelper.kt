@@ -55,8 +55,8 @@ class APIHelper {
                         var price_level : Int = -1
                         var rating : Double = -1.0
                         var user_ratings_total : Int = -1
-
                         var opening_now : Boolean = true
+
                         if(restaurant.has("price_level")){
                             price_level = restaurant.getInt("price_level")
                         }
@@ -84,7 +84,7 @@ class APIHelper {
                             price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
                             opening_now = opening_now, url = url, latitude = latitude, longitude = longitude)
                         )
-                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
+//                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
                     }
                     callback()
 
@@ -98,6 +98,12 @@ class APIHelper {
             val maxHeight = 400
             var url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxHeight=$maxHeight&photoreference=$photo_reference&key=$API_KEY"
             return url
+        }
+
+        fun getPhotoReferenceFromUrl(photoUrl : String) : String{
+            var photo_reference = photoUrl.substringAfter("photo_reference=")
+            photo_reference = photo_reference.substringBefore('&')
+            return photo_reference
         }
     }
 

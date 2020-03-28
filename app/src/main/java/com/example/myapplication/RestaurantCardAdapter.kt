@@ -53,8 +53,6 @@ class CardStackAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-
-
         val restaurant = restaurants[position]
 
         //send restaurant from here
