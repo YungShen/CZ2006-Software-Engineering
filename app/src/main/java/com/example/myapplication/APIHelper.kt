@@ -120,7 +120,7 @@ class APIHelper {
                         val photos = result.getJSONArray("photos")
                         for(i in 0 until photos.length()){
                             val photoReference = photos.getJSONObject(i).getString("photo_reference")
-                            placePhotos.add(getPhotoUrl(photoReference))
+                            placePhotos.add(photoReference)
                         }
                         callback(placePhotos)
                     }catch(e : Exception){
@@ -131,7 +131,7 @@ class APIHelper {
             return request
         }
 
-        private fun getPhotoUrl(photo_reference : String) : String{
+        fun getPhotoUrl(photo_reference : String) : String{
             val maxWidth = 400
             val maxHeight = 400
             var url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxHeight=$maxHeight&photoreference=$photo_reference&key=$API_KEY"

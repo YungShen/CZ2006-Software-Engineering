@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,11 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import java.util.Collections.addAll
 
 
 class PhotoList : Fragment() {
@@ -35,6 +38,7 @@ class PhotoList : Fragment() {
         return inflater.inflate(R.layout.fragment_photo_list, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = PhotoListAdapter()
         photoPager = view.findViewById(R.id.photo_pager)
@@ -43,13 +47,36 @@ class PhotoList : Fragment() {
         val requestQueue = SingletonObjects.getInstance(this.requireContext()).requestQueue
         requestQueue.add(APIHelper.placeDetailsRequest(place_id
         ) {
+            val displayPhotoList = it
+//            if(it.size > 5){
+//                // getting 5 random first, then append to the list of fixed best-voted (size <= 3) and slice into size = 5 later
+//                val randomList = (0..it.size).shuffled().take(5)
+//
+//                val photoVote = mutableListOf<Int>()
+//                for(i in 0 until it.size){
+//                    getVote(place_id, it[i])
+//                    photoVote.add(vote)
+//                }
+//                val toBeDisplayed = listOf<Boolean>()
+//                val photoVoteCopy = listOf<Int>().apply{ addAll(photoVote) }
+//
+//                for(i in 0 until it.size){
+//
+//                }
+//                // what if all photo is voted negative?
+//
+//            }
+            for(i in 0 until displayPhotoList.size){
+                displayPhotoList[i] = APIHelper.getPhotoUrl(displayPhotoList[i])
+            }
+            adapter.setItemList(displayPhotoList.toList())
+
             // if it.size > 5
             // get current database votes
             // calculate how many to randomize
             // exclude the photos that has either positive or negative votes in the database
             // randomize the remaining photos
             // pass the list to the adapter
-            adapter.setItemList(it.toList())
         })
 
         val upvote = view.findViewById<Button>(R.id.UpvoteButton)
@@ -77,6 +104,8 @@ class PhotoList : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if(dataSnapshot.child(placeId).child(photoId)!!.exists()) {
                     vote = dataSnapshot.child(placeId).child(photoId).getValue<Int>()!!
+                }else{
+                    vote = 0
                 }
             }
 

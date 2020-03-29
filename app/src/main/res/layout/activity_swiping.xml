@@ -95,7 +95,9 @@
         android:layout_above="@id/ShortlistButtonRow"
         android:layout_below="@id/SetLocationCard"
         android:clipToPadding="false"
-        android:padding="4dp"></com.yuyakaido.android.cardstackview.CardStackView>
+        android:padding="4dp">
+
+    </com.yuyakaido.android.cardstackview.CardStackView>
 
     <!--    <include-->
     <!--        layout="@layout/item_restaurant_card"-->
@@ -104,6 +106,52 @@
     <!--        android:layout_above="@id/ShortlistButtonRow"-->
     <!--        android:layout_below="@id/LocationClickable"-->
     <!--        />-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/IncreaseRadiusCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/ShortlistButtonRow"
+        android:layout_below="@id/SetLocationCard"
+        android:layout_marginStart="@dimen/big_margin"
+        android:layout_marginLeft="@dimen/big_margin"
+        android:layout_marginTop="@dimen/big_margin"
+        android:layout_marginEnd="@dimen/big_margin"
+        android:layout_marginRight="@dimen/big_margin"
+        android:layout_marginBottom="@dimen/big_margin"
+        tools:visibility="invisible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/IncreaseRadiusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:text="No more restaurants available. Do you wish to increase search radius?"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/IncreaseRadiusButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/IncreaseRadiusText"
+                android:text="Increase Radius" />
+
+            <Button
+                android:id="@+id/NotIncreaseRadiusButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/IncreaseRadiusButton"
+                android:text="Go to shortlisted" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/ShortlistButtonRow"

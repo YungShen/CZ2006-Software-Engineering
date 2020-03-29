@@ -1,14 +1,19 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -53,6 +58,8 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     private var RestaurantsFromAPI = mutableListOf<Restaurant>()
     private var currentRestaurant = 0
 
+    private val userSettings = UserSettings()
+
     private fun setRestaurantCallback(){
         adapter.setRestaurants(RestaurantsFromAPI)
         cardStackView.adapter?.notifyDataSetChanged()
@@ -61,8 +68,9 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_swiping)
+
+        findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = INVISIBLE
         setupButtons()
         setupCardStackView()
 
@@ -83,11 +91,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
         }
         if(direction == Direction.Top){
-            val intent = Intent(this, FinalActivity::class.java)
+            val intent = Intent(this, FinalActivity::class.java).putExtra("restaurant_to_final",RestaurantsFromAPI[currentRestaurant])
             startActivity(intent)
         }
         viewedRestaurants.add(RestaurantsFromAPI[currentRestaurant].place_id)
         currentRestaurant++
+
+        if(currentRestaurant == RestaurantsFromAPI.size){
+            Log.d("Main_Page.kt", "No more restaurants")
+            findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = VISIBLE
+        }
     }
 
     override fun onCardRewound() {
@@ -129,7 +142,15 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
     }
 
+    @SuppressLint("ShowToast")
     private fun setupButtons(){
+
+        fun goToShortlisted(){
+            val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
+            intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
+            startActivity(intent)
+        }
+
         var button = findViewById<Button>(R.id.SettingsButton)
         button.setOnClickListener(
             View.OnClickListener {
@@ -147,9 +168,24 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button = findViewById<Button>(R.id.ViewShortlistedButton)
         button.setOnClickListener(
             View.OnClickListener {
-                val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
-                intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
-                startActivity(intent)
+                goToShortlisted()
+            }
+        )
+        button = findViewById<Button>(R.id.NotIncreaseRadiusButton)
+        button.setOnClickListener(
+            View.OnClickListener {
+                goToShortlisted()
+            }
+        )
+        button = findViewById<Button>(R.id.IncreaseRadiusButton)
+        button.setOnClickListener(
+            View.OnClickListener {
+                if(userSettings.radius < 5){
+                    userSettings.radius += 1
+                    Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
+                }
             }
         )
         var imageButton = findViewById<ImageButton>(R.id.DiscardButton)
@@ -181,7 +217,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()
                     .setDirection(Direction.Top)
-
                     .setDuration(Duration.Normal.duration)
                     .setInterpolator(AccelerateInterpolator())
                     .build()
