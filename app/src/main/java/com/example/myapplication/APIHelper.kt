@@ -29,14 +29,29 @@ class APIHelper {
 
     companion object{
 
+        private val settings = UserSettings()
         private val API_KEY = "AIzaSyATXIXpRO7l62cUt_vhiSzdOeSiiwKEnSU"
-        private val radius = 1500
-        private val latitude = -33.8670522
-        private val longitude = 151.1957362
+        private var radius = 1000
+        private var keyword = ""
+        private var latitude = -33.8670522
+        private var longitude = 151.1957362
+
+        fun adjustToUserSettings(){
+            radius = settings.radius*1000
+            if(settings.halal && settings.vegetarian){
+                keyword = "halal,vegetarian"
+            }else if(settings.halal){
+                keyword = "halal"
+            }else if(settings.vegetarian){
+                keyword = "vegetarian"
+            }else{
+                keyword = ""
+            }
+        }
 
         fun nearbyPlacesRequest(nearbyRestaurants: MutableList<Restaurant>, callback: ()->Unit): JsonObjectRequest {
             val url =
-                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&type=restaurant&key=$API_KEY"
+                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
             val request = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 Response.Listener<JSONObject?>() {
@@ -93,6 +108,29 @@ class APIHelper {
             return request
         }
 
+        fun placeDetailsRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
+            val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=photos&key=$API_KEY"
+            val placePhotos = mutableListOf<String>()
+            val request = JsonObjectRequest(
+                Request.Method.GET, url, null,
+                Response.Listener<JSONObject?>() {
+                        response -> if (response != null) {
+                    try{
+                        val result = response.getJSONObject("result")
+                        val photos = result.getJSONArray("photos")
+                        for(i in 0 until photos.length()){
+                            val photoReference = photos.getJSONObject(i).getString("photo_reference")
+                            placePhotos.add(getPhotoUrl(photoReference))
+                        }
+                        callback(placePhotos)
+                    }catch(e : Exception){
+                        e.printStackTrace()
+                    }
+                }
+                }, Response.ErrorListener { error -> error.printStackTrace() })
+            return request
+        }
+
         private fun getPhotoUrl(photo_reference : String) : String{
             val maxWidth = 400
             val maxHeight = 400
@@ -101,8 +139,8 @@ class APIHelper {
         }
 
         fun getPhotoReferenceFromUrl(photoUrl : String) : String{
-            var photo_reference = photoUrl.substringAfter("photo_reference=")
-            photo_reference = photo_reference.substringBefore('&')
+            var photo_reference = photoUrl.substringBefore("&key=")
+            photo_reference = photo_reference.substringAfter("reference=")
             return photo_reference
         }
     }

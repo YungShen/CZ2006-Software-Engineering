@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 

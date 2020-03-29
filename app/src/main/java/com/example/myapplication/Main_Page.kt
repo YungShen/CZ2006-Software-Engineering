@@ -12,16 +12,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DiffUtil
 import com.android.volley.RequestQueue
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.*
-import kotlinx.android.synthetic.main.item_restaurant_card.view.*
-import java.io.ObjectInput
 import java.io.Serializable
 
 
@@ -55,7 +49,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     // both of these store place_id string
     private var viewedRestaurants = mutableListOf<String>()
-    private var shortlistedRestaurants = mutableListOf<Restaurant>()
+    private var shortlistedRestaurants = ArrayList<Restaurant>()
     private var RestaurantsFromAPI = mutableListOf<Restaurant>()
     private var currentRestaurant = 0
 
@@ -86,19 +80,14 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     override fun onCardSwiped(direction: Direction) {
         if(direction == Direction.Right || direction == Direction.Top){
             shortlistedRestaurants.add(RestaurantsFromAPI[currentRestaurant])
-            Log.d("CardStackView", "Shortlisted ${shortlistedRestaurants.last().name}")
+            Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
         }
         if(direction == Direction.Top){
             val intent = Intent(this, FinalActivity::class.java)
             startActivity(intent)
         }
-        viewedRestaurants.add(adapter.getRestaurant().place_id)
+        viewedRestaurants.add(RestaurantsFromAPI[currentRestaurant].place_id)
         currentRestaurant++
-
-//        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-//        if (manager.topPosition == adapter.itemCount - 4) {
-//            paginate()
-//        }
     }
 
     override fun onCardRewound() {
@@ -140,43 +129,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
     }
 
-//    private fun paginate() {
-//        val old = adapter.getRestaurants()
-//        val new = old.plus(RestaurantsFromAPI)
-//        val callback = SpotDiffCallback(old, new as MutableList<Restaurant>)
-//        val result = DiffUtil.calculateDiff(callback)
-//        adapter.setRestaurants(new)
-//        result.dispatchUpdatesTo(adapter)
-//    }
-//
-//    private fun reload() {
-//        val old = adapter.getRestaurants()
-//        val new = RestaurantsFromAPI
-//        val callback = SpotDiffCallback(old, new)
-//        val result = DiffUtil.calculateDiff(callback)
-//        adapter.setRestaurants(new)
-//        result.dispatchUpdatesTo(adapter)
-//    }
-//
-//    private fun removeFirst(size: Int) {
-//        if (adapter.getRestaurants().isEmpty()) {
-//            return
-//        }
-//
-//        val old = adapter.getRestaurants()
-//        val new = mutableListOf<Restaurant>().apply {
-//            addAll(old)
-//            for (i in 0 until size) {
-//                removeAt(manager.topPosition)
-//            }
-//        }
-//        val callback = SpotDiffCallback(old, new)
-//        val result = DiffUtil.calculateDiff(callback)
-//        adapter.setRestaurants(new)
-//        result.dispatchUpdatesTo(adapter)
-//    }
-
-
     private fun setupButtons(){
         var button = findViewById<Button>(R.id.SettingsButton)
         button.setOnClickListener(
@@ -196,7 +148,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
-//                intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
+                intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
                 startActivity(intent)
             }
         )

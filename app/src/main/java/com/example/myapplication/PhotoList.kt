@@ -7,18 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-
-private val PHOTO_STRS = listOf("https://media-cdn.tripadvisor.com/media/photo-s/0f/b2/5f/35/this-is-what-kfc-is-famous.jpg", "https://imgix.bustle.com/uploads/image/2019/4/9/e5e17083-273e-40f5-91cf-63a5ca339e99-ea3557c8-71a1-48e8-967f-4c166054baab-pizza-image_no-text.jpg?w=1020&h=574&fit=crop&crop=faces&auto=format&q=70")
 
 
 class PhotoList : Fragment() {
@@ -39,28 +32,33 @@ class PhotoList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         place_id = (activity as? ScrollingActivity)?.place_id.toString()
-        Log.d("PhotoList.kt", "successfully obtained place id from parent activity")
-
         return inflater.inflate(R.layout.fragment_photo_list, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = PhotoListAdapter()
-        adapter.setItemList(PHOTO_STRS)
         photoPager = view.findViewById(R.id.photo_pager)
         photoPager.adapter = adapter
 
+        val requestQueue = SingletonObjects.getInstance(this.requireContext()).requestQueue
+        requestQueue.add(APIHelper.placeDetailsRequest(place_id
+        ) {
+            // if it.size > 5
+            // get current database votes
+            // calculate how many to randomize
+            // exclude the photos that has either positive or negative votes in the database
+            // randomize the remaining photos
+            // pass the list to the adapter
+            adapter.setItemList(it.toList())
+        })
+
         val upvote = view.findViewById<Button>(R.id.UpvoteButton)
         upvote.setOnClickListener {
-            // photoreference to be changed to getCurPhotoReference
-            // not using it now because firebase doesn't allow special characters to be stored
-            upvotePhoto(place_id, "photoreference1")
+            upvotePhoto(place_id, getCurPhotoReference())
         }
         val downvote = view.findViewById<Button>(R.id.DownvoteButton)
         downvote.setOnClickListener{
-            // photoreference to be changed to getCurPhotoReference
-            // not using it now because firebase doesn't allow special characters to be stored
-            downvotePhoto(place_id, "photoreference2")
+            downvotePhoto(place_id, getCurPhotoReference())
         }
     }
 
@@ -106,47 +104,3 @@ class PhotoList : Fragment() {
 
 }
 
-class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
-
-    private var photos : List<String> = listOf()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        return PhotoViewHolder(parent)
-    }
-
-    override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        Glide.with(holder.photo)
-            .load(photos[position])
-            .into(holder.photo)
-    }
-
-    fun setItemList(photos: List<String>) {
-        this.photos = photos
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount(): Int = photos.size
-
-    fun getItemUrlAt(position: Int) : String{
-        return photos[position]
-    }
-
-}
-
-//class PhotoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-//    var photo: ImageView = view.findViewById(R.id.food_photo)
-//}
-
-
-
-class PhotoViewHolder constructor(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
-    constructor(parent: ViewGroup) :
-            this(LayoutInflater.from(parent.context).inflate(R.layout.photo_item, parent, false))
-
-    var photo: ImageView = itemView.findViewById(R.id.food_photo)
-
-//    fun bind(photo: String) {
-//        itemView.food_photo.setImageResource(photo)
-//    }
-}
