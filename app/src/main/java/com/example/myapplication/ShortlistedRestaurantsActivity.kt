@@ -13,19 +13,20 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+
     private var mockRestaurants= mutableListOf<String>(
         "KFC",
         "MCD"
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var shortlistedrestaurants = getIntent().getSerializableExtra("restaurant_list_to_pass")
+        var shortlistedrestaurants = getIntent().getSerializableExtra("restaurant_list_to_pass")as ArrayList<Restaurant>
         setContentView(R.layout.activity_shortlistedrestaurants)
 
 //        setSupportActionBar(findViewById(R.id.ShortlistedToolbar))
         actionBar?.setDisplayHomeAsUpEnabled(true)
         viewManager = LinearLayoutManager(this)
-        viewAdapter = ShortlistedRestaurantAdapter(mockRestaurants)
+        viewAdapter = ShortlistedRestaurantAdapter(shortlistedrestaurants)
         recyclerView = findViewById<RecyclerView>(R.id.ShortlistedRestaurants).apply {
             setHasFixedSize(true)
             layoutManager = viewManager

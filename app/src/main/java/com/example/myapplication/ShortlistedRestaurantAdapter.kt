@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class ShortlistedRestaurantAdapter (private val shortlistedItems: MutableList<String>) : RecyclerView.Adapter< ShortlistedRestaurantAdapter.ViewHolder>(){
+class ShortlistedRestaurantAdapter (private val shortlistedItems:ArrayList<Restaurant> ) : RecyclerView.Adapter< ShortlistedRestaurantAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var restaurantName: TextView = itemView.findViewById<TextView>(R.id.ShortlistedRestaurantName)
@@ -26,8 +26,8 @@ class ShortlistedRestaurantAdapter (private val shortlistedItems: MutableList<St
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val restaurantName = shortlistedItems[position]
-        holder.restaurantName.text = restaurantName
+        val restaurant = shortlistedItems[position]
+        holder.restaurantName.text = restaurant.name
         holder.restaurantName.setOnClickListener(View.OnClickListener {
                 v -> v.context.startActivity(Intent(v.context, FinalActivity::class.java))
         })
@@ -41,8 +41,8 @@ class ShortlistedRestaurantAdapter (private val shortlistedItems: MutableList<St
         return  shortlistedItems.size
     }
 
-    public fun addRestaurant(name: String){
-        shortlistedItems.add(name)
+    public fun addRestaurant(restaurant: Restaurant){
+        shortlistedItems.add(restaurant)
     }
 
 }
