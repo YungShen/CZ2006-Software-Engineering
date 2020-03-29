@@ -20,7 +20,7 @@ class ScrollingActivity : AppCompatActivity() {
         var restaurant = getIntent().getSerializableExtra("restaurant_to_pass") as Restaurant
         place_id = restaurant.place_id
 
-        Log.d("Passed Object","$restaurant::class")
+
 
         setContentView(R.layout.activity_scrolling)
 

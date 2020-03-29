@@ -29,7 +29,7 @@ class ShortlistedRestaurantAdapter (private val shortlistedItems:ArrayList<Resta
         val restaurant = shortlistedItems[position]
         holder.restaurantName.text = restaurant.name
         holder.restaurantName.setOnClickListener(View.OnClickListener {
-                v -> v.context.startActivity(Intent(v.context, FinalActivity::class.java))
+                v -> v.context.startActivity(Intent(v.context, FinalActivity::class.java).putExtra("restaurant_to_final",restaurant))
         })
         holder.deleteButton.setOnClickListener(View.OnClickListener {
             shortlistedItems.removeAt(position)
