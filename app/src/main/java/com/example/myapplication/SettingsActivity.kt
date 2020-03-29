@@ -1,7 +1,9 @@
 package com.example.myapplication
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
@@ -12,11 +14,14 @@ import com.google.firebase.ktx.Firebase
 class SettingsActivity : AppCompatActivity() {
 
     //var loginInfo = Login()
+    private val MIN_PROGRESS = 1
 
     private var halal = mySettings.halal  //loginInfo.currentSettings.halal
     private var veg = mySettings.vegetarian //loginInfo.currentSettings.vegetarian
     private var distance = 1000 * mySettings.radius //loginInfo.currentSettings.radius
-    private val minProgress = 1
+    private val halalCopy = halal
+    private val vegCopy = veg
+    private val distanceCopy = distance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +47,8 @@ class SettingsActivity : AppCompatActivity() {
         seek?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             val radiusValue = findViewById<TextView>(R.id.DistanceValue)
             override fun onProgressChanged(seek: SeekBar?, progress: Int, fromUser: Boolean) {
-                if(progress < minProgress){
-                    seek?.progress = minProgress
+                if(progress < MIN_PROGRESS){
+                    seek?.progress = MIN_PROGRESS
                 }else{
                     distance = progress*1000
                     radiusValue.text = distance.toString()
@@ -63,7 +68,16 @@ class SettingsActivity : AppCompatActivity() {
 
         val save = findViewById<Button>(R.id.SaveButton)
         save.setOnClickListener(
-            View.OnClickListener { saveSettings() }
+            View.OnClickListener {
+                saveSettings()
+                var settingsChanged = false
+                if(halal != halalCopy || veg != vegCopy || distance != distanceCopy){
+                    settingsChanged = true
+                }
+                Log.d("SettingsActivity.kt", "settingsChanged passing to Main_Page: $settingsChanged")
+                setResult(Activity.RESULT_OK, Intent().putExtra("settingsChanged", settingsChanged))
+                finish()
+            }
         )
 
     }

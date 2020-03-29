@@ -1,8 +1,10 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +16,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -35,37 +38,32 @@ data class Restaurant(var place_id:String,
                       val user_ratings_total: Int,
                       val opening_now: Boolean) :Serializable
 
-
-
 class Main_Page : AppCompatActivity(), CardStackListener {
 
-    // mock list of restaurants
-//    private val mockRestaurants = listOf(
-//        Restaurant(name="KFC", url="https://media-cdn.tripadvisor.com/media/photo-s/0f/b2/5f/35/this-is-what-kfc-is-famous.jpg"),
-//        Restaurant(name="Pizza Hut", url="https://imgix.bustle.com/uploads/image/2019/4/9/e5e17083-273e-40f5-91cf-63a5ca339e99-ea3557c8-71a1-48e8-967f-4c166054baab-pizza-image_no-text.jpg?w=1020&h=574&fit=crop&crop=faces&auto=format&q=70"),
-//        Restaurant(name="Subway", url="https://www.subway.com/~/media/Base_English/Images/FooterButtons/footer_popup-menu_group.jpg?la=en-SG&hash=06CEB4EF8DA4CDD18EF4D18E9A71098804A5A704"),
-//        Restaurant(name="Starbucks", url="https://assets.grab.com/wp-content/uploads/sites/4/2019/03/14182747/starbucks-delivery-singapore-grabfood-700x700.jpg"),
-//        Restaurant(name="McDonald's", url="https://image.shutterstock.com/image-photo/russia-saintpetersburg-december-24-2018-260nw-1265992426.jpg")
-//    )
+    private val SETTINGS_ACTIVITY_REQUEST_CODE = 0
+
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
     private val adapter by lazy { CardStackAdapter() }
     private lateinit var mQueue : RequestQueue
 
-    // both of these store place_id string
     private var viewedRestaurants = mutableListOf<String>()
     private var shortlistedRestaurants = ArrayList<Restaurant>()
-    private var RestaurantsFromAPI = mutableListOf<Restaurant>()
+    private var restaurantsFromAPI = mutableListOf<Restaurant>()
     private var currentRestaurant = 0
 
-    private val userSettings = UserSettings()
-
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun setRestaurantCallback(){
-        adapter.setRestaurants(RestaurantsFromAPI)
+        restaurantsFromAPI.removeIf {
+            viewedRestaurants.contains(it.place_id)
+        }
+        Log.d("Main_Page.kt", "current swipable restaurant list length: ${restaurantsFromAPI.size}")
+        adapter.setRestaurants(restaurantsFromAPI)
         cardStackView.adapter?.notifyDataSetChanged()
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiping)
@@ -75,32 +73,51 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         setupCardStackView()
 
         mQueue = SingletonObjects.getInstance(this).requestQueue
-        mQueue.add(APIHelper.nearbyPlacesRequest(RestaurantsFromAPI) { setRestaurantCallback() })
+        mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
         val userAddress = intent.getStringExtra("user_address")
         val textView: TextView = findViewById<TextView>(R.id.LocationText)
         textView.text = userAddress
     }
 
-    override fun onCardDragging(direction: Direction, ratio: Float) {
-//        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == SETTINGS_ACTIVITY_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                val settingsChanged = data!!.getBooleanExtra("settingsChanged", false)
+                Log.d("Main_Page.kt", "settingsChanged passed back from SettingsActivity: $settingsChanged")
+                if(settingsChanged){
+                    Log.d("Main_Page.kt", "previous swipable restaurant list length: ${restaurantsFromAPI.size}")
+                    restaurantsFromAPI.clear()
+                    currentRestaurant = 0
+                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI,
+                        { setRestaurantCallback() }))
+                }
+            }
+        }
     }
 
     override fun onCardSwiped(direction: Direction) {
         if(direction == Direction.Right || direction == Direction.Top){
-            shortlistedRestaurants.add(RestaurantsFromAPI[currentRestaurant])
+            shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
             Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
         }
         if(direction == Direction.Top){
-            val intent = Intent(this, FinalActivity::class.java).putExtra("restaurant_to_final",RestaurantsFromAPI[currentRestaurant])
+            val intent = Intent(this, FinalActivity::class.java).putExtra("restaurant_to_final",restaurantsFromAPI[currentRestaurant])
             startActivity(intent)
         }
-        viewedRestaurants.add(RestaurantsFromAPI[currentRestaurant].place_id)
+        viewedRestaurants.add(restaurantsFromAPI[currentRestaurant].place_id)
         currentRestaurant++
 
-        if(currentRestaurant == RestaurantsFromAPI.size){
+        if(currentRestaurant == restaurantsFromAPI.size){
             Log.d("Main_Page.kt", "No more restaurants")
             findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = VISIBLE
         }
+    }
+
+    override fun onCardDragging(direction: Direction, ratio: Float) {
+//        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
     override fun onCardRewound() {
@@ -142,7 +159,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
     }
 
-    @SuppressLint("ShowToast")
     private fun setupButtons(){
 
         fun goToShortlisted(){
@@ -155,7 +171,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
             }
         )
         val clickableCard = findViewById<CardView>(R.id.SetLocationCard)
@@ -180,8 +196,8 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button = findViewById<Button>(R.id.IncreaseRadiusButton)
         button.setOnClickListener(
             View.OnClickListener {
-                if(userSettings.radius < 5){
-                    userSettings.radius += 1
+                if(mySettings.radius < 5){
+                    mySettings.radius += 1
                     Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
                 }else{
                     Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
