@@ -12,11 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DiffUtil
 import com.android.volley.RequestQueue
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.*
@@ -54,16 +50,11 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     // both of these store place_id string
     private var viewedRestaurants = mutableListOf<String>()
     private var shortlistedRestaurants = ArrayList<Restaurant>()
-    private var currentRestaurants = mutableListOf<Restaurant>()
-
-
-
-
-
-
+    private var RestaurantsFromAPI = mutableListOf<Restaurant>()
+    private var currentRestaurant = 0
 
     private fun setRestaurantCallback(){
-        adapter.setRestaurants(currentRestaurants)
+        adapter.setRestaurants(RestaurantsFromAPI)
         cardStackView.adapter?.notifyDataSetChanged()
     }
 
@@ -76,44 +67,45 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         setupCardStackView()
 
         mQueue = SingletonObjects.getInstance(this).requestQueue
-        mQueue.add(APIHelper.nearbyPlacesRequest(currentRestaurants) { setRestaurantCallback() })
+        mQueue.add(APIHelper.nearbyPlacesRequest(RestaurantsFromAPI) { setRestaurantCallback() })
         val userAddress = intent.getStringExtra("user_address")
         val textView: TextView = findViewById<TextView>(R.id.LocationText)
         textView.text = userAddress
     }
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
-        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
+//        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
     override fun onCardSwiped(direction: Direction) {
-        if(direction == Direction.Right){
-            shortlistedRestaurants.add(adapter.getRestaurant())
+        if(direction == Direction.Right || direction == Direction.Top){
+            shortlistedRestaurants.add(RestaurantsFromAPI[currentRestaurant])
+            Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
         }
-        viewedRestaurants.add(adapter.getRestaurant().place_id)
-        adapter.removeRestaurant()
-        Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-//        if (manager.topPosition == adapter.itemCount - 4) {
-//            paginate()
-//        }
+        if(direction == Direction.Top){
+            val intent = Intent(this, FinalActivity::class.java)
+            startActivity(intent)
+        }
+        viewedRestaurants.add(RestaurantsFromAPI[currentRestaurant].place_id)
+        currentRestaurant++
     }
 
     override fun onCardRewound() {
-        Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
+//        Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
     }
 
     override fun onCardCanceled() {
-        Log.d("CardStackView", "onCardCanceled: ${manager.topPosition}")
+//        Log.d("CardStackView", "onCardCanceled: ${manager.topPosition}")
     }
 
     override fun onCardAppeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_name)
-        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_name)
+//        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
     }
 
     override fun onCardDisappeared(view: View, position: Int) {
-        val textView = view.findViewById<TextView>(R.id.item_name)
-        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
+//        val textView = view.findViewById<TextView>(R.id.item_name)
+//        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
     }
 
     private fun setupCardStackView() {
@@ -137,43 +129,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
     }
 
-    private fun paginate() {
-        val old = adapter.getRestaurants()
-        val new = old.plus(currentRestaurants)
-        val callback = SpotDiffCallback(old, new as MutableList<Restaurant>)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setRestaurants(new)
-        result.dispatchUpdatesTo(adapter)
-    }
-
-    private fun reload() {
-        val old = adapter.getRestaurants()
-        val new = currentRestaurants
-        val callback = SpotDiffCallback(old, new)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setRestaurants(new)
-        result.dispatchUpdatesTo(adapter)
-    }
-
-    private fun removeFirst(size: Int) {
-        if (adapter.getRestaurants().isEmpty()) {
-            return
-        }
-
-        val old = adapter.getRestaurants()
-        val new = mutableListOf<Restaurant>().apply {
-            addAll(old)
-            for (i in 0 until size) {
-                removeAt(manager.topPosition)
-            }
-        }
-        val callback = SpotDiffCallback(old, new)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setRestaurants(new)
-        result.dispatchUpdatesTo(adapter)
-    }
-
-
     private fun setupButtons(){
         var button = findViewById<Button>(R.id.SettingsButton)
         button.setOnClickListener(
@@ -193,7 +148,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         button.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
-                intent.putExtra("restaurant_list_to_pass",shortlistedRestaurants)
+                intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
                 startActivity(intent)
             }
         )

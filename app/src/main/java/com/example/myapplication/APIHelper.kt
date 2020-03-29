@@ -29,14 +29,29 @@ class APIHelper {
 
     companion object{
 
+        private val settings = UserSettings()
         private val API_KEY = "AIzaSyATXIXpRO7l62cUt_vhiSzdOeSiiwKEnSU"
-        private val radius = 1500
-        private val latitude = -33.8670522
-        private val longitude = 151.1957362
+        private var radius = 1000
+        private var keyword = ""
+        private var latitude = -33.8670522
+        private var longitude = 151.1957362
+
+        fun adjustToUserSettings(){
+            radius = settings.radius*1000
+            if(settings.halal && settings.vegetarian){
+                keyword = "halal,vegetarian"
+            }else if(settings.halal){
+                keyword = "halal"
+            }else if(settings.vegetarian){
+                keyword = "vegetarian"
+            }else{
+                keyword = ""
+            }
+        }
 
         fun nearbyPlacesRequest(nearbyRestaurants: MutableList<Restaurant>, callback: ()->Unit): JsonObjectRequest {
             val url =
-                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&type=restaurant&key=$API_KEY"
+                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
             val request = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 Response.Listener<JSONObject?>() {
@@ -55,8 +70,8 @@ class APIHelper {
                         var price_level : Int = -1
                         var rating : Double = -1.0
                         var user_ratings_total : Int = -1
-
                         var opening_now : Boolean = true
+
                         if(restaurant.has("price_level")){
                             price_level = restaurant.getInt("price_level")
                         }
@@ -84,10 +99,33 @@ class APIHelper {
                             price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
                             opening_now = opening_now, url = url, latitude = latitude, longitude = longitude)
                         )
-                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
+//                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
                     }
                     callback()
 
+                }
+                }, Response.ErrorListener { error -> error.printStackTrace() })
+            return request
+        }
+
+        fun placeDetailsRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
+            val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=photos&key=$API_KEY"
+            val placePhotos = mutableListOf<String>()
+            val request = JsonObjectRequest(
+                Request.Method.GET, url, null,
+                Response.Listener<JSONObject?>() {
+                        response -> if (response != null) {
+                    try{
+                        val result = response.getJSONObject("result")
+                        val photos = result.getJSONArray("photos")
+                        for(i in 0 until photos.length()){
+                            val photoReference = photos.getJSONObject(i).getString("photo_reference")
+                            placePhotos.add(getPhotoUrl(photoReference))
+                        }
+                        callback(placePhotos)
+                    }catch(e : Exception){
+                        e.printStackTrace()
+                    }
                 }
                 }, Response.ErrorListener { error -> error.printStackTrace() })
             return request
@@ -98,6 +136,12 @@ class APIHelper {
             val maxHeight = 400
             var url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxHeight=$maxHeight&photoreference=$photo_reference&key=$API_KEY"
             return url
+        }
+
+        fun getPhotoReferenceFromUrl(photoUrl : String) : String{
+            var photo_reference = photoUrl.substringBefore("&key=")
+            photo_reference = photo_reference.substringAfter("reference=")
+            return photo_reference
         }
     }
 
