@@ -17,14 +17,30 @@
             android:text="@string/restaurant_name_default"
             android:textSize="30sp" />
 
-        <RatingBar
-            android:id="@+id/RestaurantRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:rating="3.7" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RatingBar
+                android:id="@+id/RestaurantRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:isIndicator="true"
+                android:numStars="5" />
+
+            <TextView
+                android:id="@+id/RatingText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="-"
+                android:textColor="#6A6969"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/RestaurantPricing"
@@ -41,23 +57,20 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/PhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textColor="#6A6969"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/RestaurantAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/restaurant_address_default"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="TextView" />
     </LinearLayout>
 </ScrollView>
 

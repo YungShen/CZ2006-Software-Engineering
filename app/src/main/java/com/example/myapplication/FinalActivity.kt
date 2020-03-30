@@ -1,9 +1,11 @@
 package com.example.myapplication
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -67,6 +69,11 @@ class FinalActivity : AppCompatActivity() {
         {
             r_pricing.text="$".repeat(restaurant.price_level)
         }
+        val direction_button=findViewById(R.id.ReservationButton) as Button
+        direction_button.setOnClickListener {
+            makeReservation(restaurant)
+        }
+
 
     }
 
@@ -88,5 +95,12 @@ class FinalActivity : AppCompatActivity() {
             Intent(this@FinalActivity, GetDirections::class.java)
         this@FinalActivity.startActivity(activityChangeIntent)
     }
+    fun makeReservation(restaurant:Restaurant) {
+
+        val browserIntent =
+            Intent(Intent.ACTION_VIEW,Uri.parse(restaurant.url))
+        this@FinalActivity.startActivity(browserIntent)
+    }
+
 
 }
