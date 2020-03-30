@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 
@@ -40,7 +41,18 @@ class FinalActivity : AppCompatActivity() {
         requestQueue.add(APIHelper.placeDetailsOthersRequest(restaurant.place_id) { phone: String, web: String ->
             val website = web
             val phoneNum = phone
-
+            val direction_button=findViewById(R.id.ReservationButton) as Button
+            direction_button.setOnClickListener {
+                if(website != ""){
+                    makeReservation(website)
+                }else{
+                    Toast.makeText(this@FinalActivity,"No website available", Toast.LENGTH_SHORT).show()
+                }
+            }
+            val phoneView = findViewById<TextView>(R.id.PhoneNumber)
+            phoneView.text = phoneNum
+            val websiteView = findViewById<TextView>(R.id.RestaurantWebsite)
+            websiteView.text = website
         })
 
 
@@ -69,11 +81,6 @@ class FinalActivity : AppCompatActivity() {
         {
             r_pricing.text="$".repeat(restaurant.price_level)
         }
-        val direction_button=findViewById(R.id.ReservationButton) as Button
-        direction_button.setOnClickListener {
-            makeReservation(restaurant)
-        }
-
 
     }
 
@@ -95,10 +102,10 @@ class FinalActivity : AppCompatActivity() {
             Intent(this@FinalActivity, GetDirections::class.java)
         this@FinalActivity.startActivity(activityChangeIntent)
     }
-    fun makeReservation(restaurant:Restaurant) {
+    fun makeReservation(website:String) {
 
         val browserIntent =
-            Intent(Intent.ACTION_VIEW,Uri.parse(restaurant.url))
+            Intent(Intent.ACTION_VIEW,Uri.parse(website))
         this@FinalActivity.startActivity(browserIntent)
     }
 

@@ -39,6 +39,7 @@ data class Restaurant(var place_id:String,
 class Main_Page : AppCompatActivity(), CardStackListener {
 
     private val SETTINGS_ACTIVITY_REQUEST_CODE = 0
+    private val MAP_ACTIVITY_REQUEST_CODE = 1
 
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
@@ -94,6 +95,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                     currentRestaurant = 0
                     mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
                 }
+            }
+        }else if (requestCode == MAP_ACTIVITY_REQUEST_CODE){
+            val address = data!!.getStringExtra("newAddress")
+            val prevAddress = findViewById<TextView>(R.id.LocationText)
+            if(address != prevAddress.text){
+                restaurantsFromAPI.clear()
+                currentRestaurant = 0
+                mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
+            }else{
+                Toast.makeText(this@Main_Page,"Address not changed!", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -179,7 +190,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         clickableCard.setOnClickListener(
             View.OnClickListener {
                 val intent = Intent(this, MapsActivityCurrentPlace::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
             }
         )
         button = findViewById<Button>(R.id.ViewShortlistedButton)

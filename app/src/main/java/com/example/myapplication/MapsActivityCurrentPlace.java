@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -495,9 +496,12 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
 
         addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1);
         address = addresses.get(0).getAddressLine(0);
-        Intent activityChangeIntent = new Intent(MapsActivityCurrentPlace.this, Main_Page.class);
-        activityChangeIntent.putExtra("user_address", address);
-        MapsActivityCurrentPlace.this.startActivity(activityChangeIntent);
+//        Intent activityChangeIntent = new Intent(MapsActivityCurrentPlace.this, Main_Page.class);
+//        activityChangeIntent.putExtra("user_address", address);
+//        MapsActivityCurrentPlace.this.startActivity(activityChangeIntent);
+
+        setResult(Activity.RESULT_OK, new Intent().putExtra("newAddress", address));
+        finish();
 
     }
 
