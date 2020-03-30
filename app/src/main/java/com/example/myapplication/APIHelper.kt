@@ -108,7 +108,7 @@ class APIHelper {
             return request
         }
 
-        fun placeDetailsRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
+        fun placeDetailsPhotosRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
             val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=photos&key=$API_KEY"
             val placePhotos = mutableListOf<String>()
             val request = JsonObjectRequest(
@@ -130,6 +130,32 @@ class APIHelper {
                 }, Response.ErrorListener { error -> error.printStackTrace() })
             return request
         }
+
+        fun placeDetailsOthersRequest(place_id: String, callback: (phoneNum : String, website: String) -> Unit) : JsonObjectRequest {
+            val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=international_phone_number,website&key=$API_KEY"
+            val request = JsonObjectRequest(
+                Request.Method.GET, url, null,
+                Response.Listener<JSONObject?>() {
+                        response -> if (response != null) {
+                    var international_phone_number= ""
+                    var website = ""
+                    try{
+                        val result = response.getJSONObject("result")
+                        if(result.has("international_phone_number")){
+                            international_phone_number = result.getString("international_phone_number")
+                        }
+                        if(result.has("website")){
+                            website = result.getString("website")
+                        }
+                    }catch(e : Exception){
+                        e.printStackTrace()
+                    }
+                    callback(international_phone_number, website)
+                }
+                }, Response.ErrorListener { error -> error.printStackTrace() })
+            return request
+        }
+
 
         fun getPhotoUrl(photo_reference : String) : String{
             val maxWidth = 400

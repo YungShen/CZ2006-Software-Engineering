@@ -17,7 +17,6 @@ class FinalActivity : AppCompatActivity() {
     private lateinit var adapter: PhotoListAdapter
     private lateinit var photoPager: ViewPager2
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var restaurant = getIntent().getSerializableExtra("restaurant_to_final") as Restaurant
@@ -30,11 +29,16 @@ class FinalActivity : AppCompatActivity() {
         photoPager.adapter = adapter
 
         val requestQueue = SingletonObjects.getInstance(this).requestQueue
-        requestQueue.add(APIHelper.placeDetailsRequest(restaurant.place_id) {
+        requestQueue.add(APIHelper.placeDetailsPhotosRequest(restaurant.place_id) {
             for(i in 0 until it.size){
                 it[i] = APIHelper.getPhotoUrl(it[i])
             }
             adapter.setItemList(it.toList())
+        })
+        requestQueue.add(APIHelper.placeDetailsOthersRequest(restaurant.place_id) { phone: String, web: String ->
+            val website = web
+            val phoneNum = phone
+
         })
 
 

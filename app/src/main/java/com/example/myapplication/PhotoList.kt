@@ -45,7 +45,7 @@ class PhotoList : Fragment() {
         photoPager.adapter = adapter
 
         val requestQueue = SingletonObjects.getInstance(this.requireContext()).requestQueue
-        requestQueue.add(APIHelper.placeDetailsRequest(place_id
+        requestQueue.add(APIHelper.placeDetailsPhotosRequest(place_id
         ) {
             val displayPhotoList = it
 //            if(it.size > 5){
