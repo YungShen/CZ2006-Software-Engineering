@@ -50,9 +50,8 @@ class Login : AppCompatActivity() {
 //        toMainPage(view)
 //    }
 
-    // to fix: there is
-    private fun toMainPage(view: View){
-        val intent = Intent(this, Main_Page::class.java)
+    private fun toSetLocation(view: View){
+        val intent = Intent(this, MapsActivityCurrentPlace::class.java)
         finish()
         startActivity(intent)
     }
@@ -120,7 +119,7 @@ class Login : AppCompatActivity() {
                     }
                 })
 
-                toMainPage(view)
+                toSetLocation(view)
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Failed to log in: ${it.message}", Toast.LENGTH_SHORT).show()
