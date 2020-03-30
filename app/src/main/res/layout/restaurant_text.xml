@@ -17,13 +17,6 @@
             android:text="@string/restaurant_name_default"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/RestaurantAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/restaurant_address_default"
-            android:textSize="24sp" />
-
         <RatingBar
             android:id="@+id/RestaurantRating"
             android:layout_width="wrap_content"
@@ -38,14 +31,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/restaurant_pricing_and_distance_default"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/RestaurantOpeningHours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/restaurant_opening_hours_default"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/RestaurantAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restaurant_address_default"
+            android:textSize="18sp" />
     </LinearLayout>
 </ScrollView>
 

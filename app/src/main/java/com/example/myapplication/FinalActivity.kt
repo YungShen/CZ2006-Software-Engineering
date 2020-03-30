@@ -21,14 +21,22 @@ class FinalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var restaurant = getIntent().getSerializableExtra("restaurant_to_final") as Restaurant
-        val requestQueue = SingletonObjects.getInstance(this).requestQueue
-
-
-
-
-
 
         setContentView(R.layout.activity_final)
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+        //setSupportActionBar(findViewById(R.id.FinalToolbar))
+        adapter = PhotoListAdapter()
+        photoPager = findViewById(R.id.final_photo_pager)
+        photoPager.adapter = adapter
+
+        val requestQueue = SingletonObjects.getInstance(this).requestQueue
+        requestQueue.add(APIHelper.placeDetailsRequest(restaurant.place_id) {
+            for(i in 0 until it.size){
+                it[i] = APIHelper.getPhotoUrl(it[i])
+            }
+            adapter.setItemList(it.toList())
+        })
+
 
         val r_name = findViewById(R.id.RestaurantName) as TextView
         r_name.text=restaurant.name
@@ -55,21 +63,6 @@ class FinalActivity : AppCompatActivity() {
         {
             r_pricing.text="$".repeat(restaurant.price_level)
         }
-
-
-
-
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        //setSupportActionBar(findViewById(R.id.FinalToolbar))
-        adapter = PhotoListAdapter()
-        photoPager = findViewById(R.id.final_photo_pager)
-        photoPager.adapter = adapter
-
-//        val requestQueue = SingletonObjects.getInstance(this).requestQueue
-//        requestQueue.add(APIHelper.placeDetailsRequest(place_id
-//        ) {
-//            adapter.setItemList(it.toList())
-//        })
 
     }
 
