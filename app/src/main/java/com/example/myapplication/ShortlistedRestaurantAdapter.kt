@@ -41,8 +41,17 @@ class ShortlistedRestaurantAdapter (private val shortlistedItems:ArrayList<Resta
         return  shortlistedItems.size
     }
 
-    public fun addRestaurant(restaurant: Restaurant){
+    fun addRestaurant(restaurant: Restaurant){
         shortlistedItems.add(restaurant)
+    }
+
+    fun clearAllRestaurant(){
+        shortlistedItems.clear()
+        notifyDataSetChanged()
+    }
+
+    fun getRestaurants(): ArrayList<Restaurant>{
+        return shortlistedItems
     }
 
 }

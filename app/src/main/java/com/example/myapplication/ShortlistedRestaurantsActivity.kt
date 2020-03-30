@@ -5,19 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.random.Random
 
 class ShortlistedRestaurantsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: ShortlistedRestaurantAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private var mockRestaurants= mutableListOf<String>(
-        "KFC",
-        "MCD"
-    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var shortlistedrestaurants = getIntent().getSerializableExtra("restaurant_list_to_pass")as ArrayList<Restaurant>
@@ -33,12 +31,19 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
             adapter = viewAdapter
 
         }
-    }
 
-    fun toFinalActivity(view: View) {
-//        val restaurant = findViewById<TextView>(R.id.ShortlistedRestaurantName)
-        val intent = Intent(this, FinalActivity::class.java)
-        startActivity(intent)
+        val clearAll = findViewById<Button>(R.id.ClearAllButton)
+        clearAll.setOnClickListener(View.OnClickListener {
+            viewAdapter.clearAllRestaurant()
+        })
+
+        val randomPick = findViewById<Button>(R.id.RandomPickButton)
+        randomPick.setOnClickListener(View.OnClickListener {
+            val randomInt = Random.nextInt(shortlistedrestaurants.size)
+            val intent = Intent(this, FinalActivity::class.java)
+                .putExtra("restaurant_to_final", viewAdapter.getRestaurants()[randomInt])
+            startActivity(intent)
+        })
     }
 
     private fun toHistory(){

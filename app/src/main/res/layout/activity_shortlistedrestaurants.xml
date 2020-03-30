@@ -8,53 +8,61 @@
     android:orientation="vertical"
     tools:context=".ShortlistedRestaurantsActivity">
 
-<!--    <androidx.appcompat.widget.Toolbar-->
-<!--        android:id="@+id/ShortlistedToolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="?attr/colorPrimary"-->
-<!--        android:minHeight="?attr/actionBarSize"-->
-<!--        android:theme="?attr/actionBarTheme"-->
-<!--        app:menu="@menu/menu_shortlisted" />-->
+    <!--    <androidx.appcompat.widget.Toolbar-->
+    <!--        android:id="@+id/ShortlistedToolbar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="?attr/colorPrimary"-->
+    <!--        android:minHeight="?attr/actionBarSize"-->
+    <!--        android:theme="?attr/actionBarTheme"-->
+    <!--        app:menu="@menu/menu_shortlisted" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ShortlistedRestaurants"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
+        android:layout_above="@id/ShortlistedButtonCol"
+        android:layout_alignParentTop="true"
         tools:listitem="@layout/shortlisted_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <Button
-        android:id="@+id/randompick"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/ClearAllButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginLeft="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginEnd="@dimen/medium_margin"
-        android:layout_marginRight="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:text="Pick for me!"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/ClearAllButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ShortlistedButtonCol"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="@dimen/medium_margin"
-        android:layout_marginLeft="@dimen/medium_margin"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginEnd="@dimen/medium_margin"
-        android:layout_marginRight="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:text="Clear All"
-        android:textSize="24sp" />
+        android:background="@color/quantum_bluegrey200"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/RandomPickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:text="Pick for me!"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/ClearAllButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:text="Clear All"
+            android:textSize="18sp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

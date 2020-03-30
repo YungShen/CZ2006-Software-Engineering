@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:padding="@dimen/big_margin">
 
-    <TextView
-        android:id="@+id/RestaurantName"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/restaurant_name_default" />
+        android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/RestaurantName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restaurant_name_default"
+            android:textSize="30sp" />
 
+        <TextView
+            android:id="@+id/RestaurantAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restaurant_address_default"
+            android:textSize="24sp" />
 
-    <RatingBar
-        android:id="@+id/RestaurantRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:isIndicator="true"
-        android:clickable="false"
-        android:numStars="5"
-        android:rating="3.7" />
+        <RatingBar
+            android:id="@+id/RestaurantRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="3.7" />
 
-    <TextView
-        android:id="@+id/RestaurantPricing"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/restaurant_pricing_and_distance_default" />
+        <TextView
+            android:id="@+id/RestaurantPricing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restaurant_pricing_and_distance_default"
+            android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/RestaurantOpeningHours"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/restaurant_opening_hours_default" />
+        <TextView
+            android:id="@+id/RestaurantOpeningHours"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/restaurant_opening_hours_default"
+            android:textSize="24sp" />
+    </LinearLayout>
+</ScrollView>
 
-    <TextView
-        android:id="@+id/RestaurantAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/restaurant_address_default" />
-
-
-
-
-
-
-</LinearLayout>

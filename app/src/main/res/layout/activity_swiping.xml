@@ -137,16 +137,18 @@
 
             <Button
                 android:id="@+id/IncreaseRadiusButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/IncreaseRadiusText"
+                android:layout_centerHorizontal="true"
                 android:text="Increase Radius" />
 
             <Button
                 android:id="@+id/NotIncreaseRadiusButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/IncreaseRadiusButton"
+                android:layout_centerHorizontal="true"
                 android:text="Go to shortlisted" />
 
         </RelativeLayout>

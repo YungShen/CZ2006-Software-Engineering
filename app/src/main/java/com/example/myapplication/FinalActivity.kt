@@ -50,7 +50,7 @@ class FinalActivity : AppCompatActivity() {
         }
         else
         {
-            r_pricing.text="$"+restaurant.price_level.toString()
+            r_pricing.text="$".repeat(restaurant.price_level)
         }
 
 

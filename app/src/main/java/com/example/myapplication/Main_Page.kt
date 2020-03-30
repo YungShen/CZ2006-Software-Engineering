@@ -1,9 +1,7 @@
 package com.example.myapplication
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -58,8 +56,12 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             viewedRestaurants.contains(it.place_id)
         }
         Log.d("Main_Page.kt", "current swipable restaurant list length: ${restaurantsFromAPI.size}")
-        adapter.setRestaurants(restaurantsFromAPI)
-        cardStackView.adapter?.notifyDataSetChanged()
+        if(restaurantsFromAPI.size==0){
+            Toast.makeText(this@Main_Page,"No more distinct restaurants...", Toast.LENGTH_LONG).show()
+        }else{
+            adapter.setRestaurants(restaurantsFromAPI)
+            cardStackView.adapter?.notifyDataSetChanged()
+        }
     }
 
 
@@ -88,11 +90,9 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 val settingsChanged = data!!.getBooleanExtra("settingsChanged", false)
                 Log.d("Main_Page.kt", "settingsChanged passed back from SettingsActivity: $settingsChanged")
                 if(settingsChanged){
-                    Log.d("Main_Page.kt", "previous swipable restaurant list length: ${restaurantsFromAPI.size}")
                     restaurantsFromAPI.clear()
                     currentRestaurant = 0
-                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI,
-                        { setRestaurantCallback() }))
+                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
                 }
             }
         }
@@ -159,6 +159,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun setupButtons(){
 
         fun goToShortlisted(){
@@ -199,6 +200,9 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 if(mySettings.radius < 5){
                     mySettings.radius += 1
                     Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
+                    restaurantsFromAPI.clear()
+                    currentRestaurant = 0
+                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
                 }else{
                     Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
                 }
