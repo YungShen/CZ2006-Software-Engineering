@@ -94,8 +94,7 @@ class SettingsActivity : AppCompatActivity() {
         mySettings.radius = distance/1000
 
 
-        Toast.makeText(this@SettingsActivity, "halal: $halal\nveg: $veg\nradius: $distance",
-            Toast.LENGTH_SHORT).show()
+        
         // back to main page
     }
 
