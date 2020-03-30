@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,6 +99,9 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
     //Marker and User Coordinate
     protected Marker userLocation;
     protected LatLng userCoordinate;
+
+    //User address
+    private String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,10 +237,19 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
     }
 
     private void InitializeMarker(){
-        userCoordinate = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+        if (mySettings.locationOfUser == null) {
+            userCoordinate = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+        }
+        else {
+            userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
+
+        }
         userLocation = mMap.addMarker(new MarkerOptions()
                 .position(userCoordinate)
                 .draggable(true));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(userCoordinate.latitude,
+                        userCoordinate.longitude), DEFAULT_ZOOM));
     }
 
     /**
@@ -257,9 +270,6 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
                             if (mLastKnownLocation != null) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(mLastKnownLocation.getLatitude(),
-                                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
                                 InitializeMarker();
                             }
                         } else {
@@ -318,10 +328,10 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         updateLocationUI();
     }
 
-    /**
+  /*  *//**
      * Prompts the user to select the current place from a list of likely places, and shows the
      * current place on the map - provided the user has granted location permission.
-     */
+     *//*
     private void showCurrentPlace() {
         if (mMap == null) {
             return;
@@ -397,7 +407,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
             // Prompt the user for permission.
             getLocationPermission();
         }
-    }
+    }*/
 
     /**
      * Displays a form allowing the user to select a place from a list of likely places.
@@ -466,6 +476,9 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         userCoordinate = marker.getPosition();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(userCoordinate.latitude, userCoordinate.longitude), DEFAULT_ZOOM));
+        /*EditText etPlace = (EditText) title.getView().findViewById(R.id.autocomplete_fragment);
+        etPlace.setHint(address);*/
+
     }
 
     @Override
@@ -475,13 +488,13 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
 
     // Action to be performed when "Confirm" is clicked
     public void sendMessage(View view) throws IOException {
+        mySettings.locationOfUser = userCoordinate;
         Geocoder geocoder;
         List<Address> addresses;
         geocoder = new Geocoder(this, Locale.getDefault());
 
-        addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-        String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1);
+        address = addresses.get(0).getAddressLine(0);
         Intent activityChangeIntent = new Intent(MapsActivityCurrentPlace.this, Main_Page.class);
         activityChangeIntent.putExtra("user_address", address);
         MapsActivityCurrentPlace.this.startActivity(activityChangeIntent);

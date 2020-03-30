@@ -1,12 +1,12 @@
 package com.example.myapplication
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.Volley
+import org.json.JSONArray
 import org.json.JSONObject
 
 class SingletonObjects constructor(context: Context){
@@ -29,20 +29,19 @@ class APIHelper {
 
     companion object{
 
-        private val settings = UserSettings()
         private val API_KEY = "AIzaSyATXIXpRO7l62cUt_vhiSzdOeSiiwKEnSU"
-        private var radius = 1000
+        private var radius = mySettings.radius*1000
         private var keyword = ""
-        private var latitude = -33.8670522
-        private var longitude = 151.1957362
+        private var latitude = mySettings.locationOfUser.latitude
+        private var longitude = mySettings.locationOfUser.longitude
 
         fun adjustToUserSettings(){
-            radius = settings.radius*1000
-            if(settings.halal && settings.vegetarian){
+            radius = mySettings.radius*1000
+            if(mySettings.halal && mySettings.vegetarian){
                 keyword = "halal,vegetarian"
-            }else if(settings.halal){
+            }else if(mySettings.halal){
                 keyword = "halal"
-            }else if(settings.vegetarian){
+            }else if(mySettings.vegetarian){
                 keyword = "vegetarian"
             }else{
                 keyword = ""
@@ -60,6 +59,7 @@ class APIHelper {
                     val results = response.getJSONArray("results")
                     for(i in 0..(results.length()-1)){
                         val restaurant = results.getJSONObject(i)
+//                        Log.d("API Helper",restaurant.toString())
                         val name = restaurant.getString("name")
                         val place_id = restaurant.getString("place_id")
                         val address = restaurant.getString("vicinity")
@@ -84,20 +84,20 @@ class APIHelper {
                         if(restaurant.has("opening_now")){
                             opening_now = restaurant.getBoolean("opening_now")
                         }
-
-                        val photos = restaurant.getJSONArray("photos")
-                        val url : String
-                        if(photos.length() != 0) {
-                            val reference = photos.getJSONObject(0).getString("photo_reference")
-                            url = getPhotoUrl(reference)
-                        }else{
-                            url = "https://www.nicepng.com/png/detail/214-2148603_you-eat-ready-to-eat-food-icon.png"
+                        var photos: JSONArray
+                        var photoUrl: String = "https://www.nicepng.com/png/detail/214-2148603_you-eat-ready-to-eat-food-icon.png"
+                        if(restaurant.has("photos")) {
+                            photos = restaurant.getJSONArray("photos")
+                            if (photos.length() != 0) {
+                                val reference = photos.getJSONObject(0).getString("photo_reference")
+                                photoUrl = getPhotoUrl(reference)
+                            }
                         }
 
                         nearbyRestaurants.add(
                             Restaurant(name = name, place_id = place_id, address = address,
                             price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
-                            opening_now = opening_now, url = url, latitude = latitude, longitude = longitude)
+                            opening_now = opening_now, url = photoUrl, latitude = latitude, longitude = longitude)
                         )
 //                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
                     }
