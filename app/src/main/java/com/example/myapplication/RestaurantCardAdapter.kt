@@ -74,6 +74,7 @@ class CardStackAdapter(
 
     fun setRestaurants(restaurants: MutableList<Restaurant>) {
         this.restaurants = restaurants
+        notifyDataSetChanged()
     }
 
     fun getRestaurants(): MutableList<Restaurant> {
@@ -86,6 +87,7 @@ class CardStackAdapter(
 
     fun removeRestaurant(){
         restaurants.removeAt(0)
+        notifyDataSetChanged()
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

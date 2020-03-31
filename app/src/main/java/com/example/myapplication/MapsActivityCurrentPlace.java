@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,8 +10,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,13 +110,19 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // Retrieve location and camera position from saved instance state.
-        if (savedInstanceState != null) {
-            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }
+//        if (savedInstanceState != null) {
+//            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+//            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+//        }
 
         // Retrieve the content view that renders the map.
         setContentView(R.layout.custom_info_contents);
+
+        if(getCallingActivity() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }else{
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
 
         // Construct a PlacesClient
         Places.initialize(getApplicationContext(), getString(R.string.google_maps_key));
@@ -128,8 +135,6 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
 
     }
 
@@ -243,7 +248,6 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         }
         else {
             userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
-
         }
         userLocation = mMap.addMarker(new MarkerOptions()
                 .position(userCoordinate)
@@ -270,7 +274,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            if (mLastKnownLocation != null) {
+                            if (mLastKnownLocation != null || mySettings.locationOfUser != null) {
                                 InitializeMarker();
                             }
                         } else {
@@ -460,7 +464,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 mLastKnownLocation = null;
-                getLocationPermission();
+//                getLocationPermission();
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
@@ -489,20 +493,31 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
 
     // Action to be performed when "Confirm" is clicked
     public void sendMessage(View view) throws IOException {
-        mySettings.locationOfUser = userCoordinate;
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1);
-        address = addresses.get(0).getAddressLine(0);
+            mySettings.locationOfUser = userCoordinate;
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
+        try{
+            addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1);
+            address = addresses.get(0).getAddressLine(0);
+        }catch(Exception e){
+            address = "";
+            Log.d("MapsActivity", "Exception from Geocoder");
+            e.printStackTrace();
+        }
 //        Intent activityChangeIntent = new Intent(MapsActivityCurrentPlace.this, Main_Page.class);
 //        activityChangeIntent.putExtra("user_address", address);
 //        MapsActivityCurrentPlace.this.startActivity(activityChangeIntent);
-
-        setResult(Activity.RESULT_OK, new Intent().putExtra("newAddress", address));
-        finish();
-
+        if(getCallingActivity() == null){
+            Log.d("MapsActivity", "Being started from login page");
+            Intent intent = new Intent(this, Main_Page.class).putExtra("user_address", address);
+            finish();
+            startActivity(intent);
+        }else{
+            Log.d("MapsActivity", "Being started from main_page\nReturning address: "+address);
+            setResult(Activity.RESULT_OK, new Intent().putExtra("user_address", address));
+            onBackPressed();
+        }
     }
 
     private boolean checkReady() {
@@ -540,6 +555,16 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
     @Override
     public void onInfoWindowClose(Marker marker) {
         //Do nothing
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            setResult(Activity.RESULT_OK, new Intent().putExtra("user_address", ""));
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

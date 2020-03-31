@@ -51,7 +51,8 @@
             android:parentActivityName=".ShortlistedRestaurantsActivity" />
         <activity
             android:name=".MapsActivityCurrentPlace"
-            android:label="@string/title_activity_maps">
+            android:label="@string/title_activity_maps"
+            android:parentActivityName=".Main_Page">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

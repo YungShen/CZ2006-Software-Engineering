@@ -101,6 +101,7 @@ class Login : AppCompatActivity() {
                                     mySettings.halal = currentSettings.halal
                                     mySettings.uid = currentSettings.uid
                                     mySettings.vegetarian = currentSettings.vegetarian
+
                                     Log.w(TAG, "user settings retrieved")
 
                                     Log.w(TAG, "halal ${currentSettings.halal}")

@@ -51,20 +51,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     private var restaurantsFromAPI = mutableListOf<Restaurant>()
     private var currentRestaurant = 0
 
-    @RequiresApi(Build.VERSION_CODES.N)
-    private fun setRestaurantCallback(){
-        restaurantsFromAPI.removeIf {
-            viewedRestaurants.contains(it.place_id)
-        }
-        Log.d("Main_Page.kt", "current swipable restaurant list length: ${restaurantsFromAPI.size}")
-        if(restaurantsFromAPI.size==0){
-            Toast.makeText(this@Main_Page,"No more distinct restaurants...", Toast.LENGTH_LONG).show()
-        }else{
-            adapter.setRestaurants(restaurantsFromAPI)
-            cardStackView.adapter?.notifyDataSetChanged()
-        }
-    }
-
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,10 +62,43 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         setupCardStackView()
 
         mQueue = SingletonObjects.getInstance(this).requestQueue
-        mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
+        mQueue.add(APIHelper.nearbyPlacesRequest(
+            restaurantsFromAPI,
+            { setRestaurantCallback(it) },
+            ""))
         val userAddress = intent.getStringExtra("user_address")
         val textView: TextView = findViewById<TextView>(R.id.LocationText)
         textView.text = userAddress
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun setRestaurantCallback(nextPageToken: String){
+        Log.d("Main_Page.kt", "Current restaurantsFromAPI size: ${restaurantsFromAPI.size}")
+        if(nextPageToken != ""){
+            Log.d("Main_Page.kt", "setRestaurantsCallback: added one more nearbySearchRequest to queue")
+            mQueue.add(APIHelper.nearbyPlacesRequest(
+                restaurantsFromAPI,
+                { setRestaurantCallback(it) },
+                nextPageToken
+            ))
+        }else{
+            // set all restaurants one shot
+            adapter.setRestaurants(restaurantsFromAPI)
+            if(restaurantsFromAPI.size == 0){
+                val increaseRadiusCard = findViewById<CardView>(R.id.IncreaseRadiusCard)
+                increaseRadiusCard.visibility = VISIBLE
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun reSearch(){
+        Log.d("Main_Page.kt", "Perform Re-search")
+        restaurantsFromAPI.clear()
+        currentRestaurant = 0
+        mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI, { setRestaurantCallback(it) }, ""))
+        val increaseRadiusCard = findViewById<CardView>(R.id.IncreaseRadiusCard)
+        increaseRadiusCard.visibility = INVISIBLE
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -89,29 +108,28 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         if(requestCode == SETTINGS_ACTIVITY_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 val settingsChanged = data!!.getBooleanExtra("settingsChanged", false)
-                Log.d("Main_Page.kt", "settingsChanged passed back from SettingsActivity: $settingsChanged")
                 if(settingsChanged){
-                    restaurantsFromAPI.clear()
-                    currentRestaurant = 0
-                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
+                    reSearch()
                 }
             }
         }else if (requestCode == MAP_ACTIVITY_REQUEST_CODE){
-            val address = data!!.getStringExtra("newAddress")
-            val prevAddress = findViewById<TextView>(R.id.LocationText)
-            if(address != prevAddress.text){
-                restaurantsFromAPI.clear()
-                currentRestaurant = 0
-                mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
-            }else{
-                Toast.makeText(this@Main_Page,"Address not changed!", Toast.LENGTH_LONG).show()
+            if(resultCode == Activity.RESULT_OK){
+                val address = data!!.getStringExtra("user_address")
+                val textView: TextView = findViewById(R.id.LocationText)
+
+                if(address != null){
+                    textView.text = address
+                    reSearch()
+                }
             }
         }
     }
 
     override fun onCardSwiped(direction: Direction) {
         if(direction == Direction.Right || direction == Direction.Top){
-            shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
+            if(!(restaurantsFromAPI[currentRestaurant] in shortlistedRestaurants)){
+                shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
+            }
             Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
         }
         if(direction == Direction.Top){
@@ -180,19 +198,15 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }
 
         var button = findViewById<Button>(R.id.SettingsButton)
-        button.setOnClickListener(
-            View.OnClickListener {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
-            }
-        )
+        button.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
+        }
         val clickableCard = findViewById<CardView>(R.id.SetLocationCard)
-        clickableCard.setOnClickListener(
-            View.OnClickListener {
-                val intent = Intent(this, MapsActivityCurrentPlace::class.java)
-                startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
-            }
-        )
+        clickableCard.setOnClickListener {
+            val intent = Intent(this, MapsActivityCurrentPlace::class.java)
+            startActivityForResult(intent, MAP_ACTIVITY_REQUEST_CODE)
+        }
         button = findViewById<Button>(R.id.ViewShortlistedButton)
         button.setOnClickListener(
             View.OnClickListener {
@@ -200,25 +214,19 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             }
         )
         button = findViewById<Button>(R.id.NotIncreaseRadiusButton)
-        button.setOnClickListener(
-            View.OnClickListener {
-                goToShortlisted()
-            }
-        )
+        button.setOnClickListener {
+            goToShortlisted()
+        }
         button = findViewById<Button>(R.id.IncreaseRadiusButton)
-        button.setOnClickListener(
-            View.OnClickListener {
-                if(mySettings.radius < 5){
-                    mySettings.radius += 1
-                    Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
-                    restaurantsFromAPI.clear()
-                    currentRestaurant = 0
-                    mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI) { setRestaurantCallback() })
-                }else{
-                    Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
-                }
+        button.setOnClickListener {
+            if(mySettings.radius < 5){
+                mySettings.radius += 1
+                Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
+                reSearch()
+            }else{
+                Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
             }
-        )
+        }
         var imageButton = findViewById<ImageButton>(R.id.DiscardButton)
         imageButton.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){

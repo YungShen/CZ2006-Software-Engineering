@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.RequestQueue
@@ -29,13 +30,15 @@ class APIHelper {
 
     companion object{
 
-        private val API_KEY = "AIzaSyATXIXpRO7l62cUt_vhiSzdOeSiiwKEnSU"
+        private const val API_KEY = "AIzaSyATXIXpRO7l62cUt_vhiSzdOeSiiwKEnSU"
         private var radius = mySettings.radius*1000
         private var keyword = ""
         private var latitude = mySettings.locationOfUser.latitude
         private var longitude = mySettings.locationOfUser.longitude
 
         fun adjustToUserSettings(){
+            latitude = mySettings.locationOfUser.latitude
+            longitude = mySettings.locationOfUser.longitude
             radius = mySettings.radius*1000
             if(mySettings.halal && mySettings.vegetarian){
                 keyword = "halal,vegetarian"
@@ -48,18 +51,32 @@ class APIHelper {
             }
         }
 
-        fun nearbyPlacesRequest(nearbyRestaurants: MutableList<Restaurant>, callback: ()->Unit): JsonObjectRequest {
-            val url =
-                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
+        fun nearbyPlacesRequest(
+            restaurantsFromAPI: MutableList<Restaurant>,
+            callback: (String)->Unit,
+            nextPageToken: String): JsonObjectRequest {
+
+            val url: String
+            if(nextPageToken != ""){
+                url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=$API_KEY&pagetoken=$nextPageToken"
+            }else{
+                adjustToUserSettings()
+                url =
+                    "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
+            }
+            Log.d("APIHelper.kt", "Performs search at $url")
+
             val request = JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener<JSONObject?>() {
-                        response -> if(response != null){
+                Response.Listener<JSONObject?>() { response -> if(response != null){
+
+                    if(response.has("error_message")){
+                        Log.e("APIHelper", response.getString("error_message"))
+                    }
 
                     val results = response.getJSONArray("results")
-                    for(i in 0..(results.length()-1)){
+                    for(i in 0 until results.length()){
                         val restaurant = results.getJSONObject(i)
-//                        Log.d("API Helper",restaurant.toString())
                         val name = restaurant.getString("name")
                         val place_id = restaurant.getString("place_id")
                         val address = restaurant.getString("vicinity")
@@ -94,19 +111,24 @@ class APIHelper {
                             }
                         }
 
-                        nearbyRestaurants.add(
+                        restaurantsFromAPI.add(
                             Restaurant(name = name, place_id = place_id, address = address,
-                            price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
-                            opening_now = opening_now, url = photoUrl, latitude = latitude, longitude = longitude)
+                                price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
+                                opening_now = opening_now, url = photoUrl, latitude = latitude, longitude = longitude)
                         )
-//                        Log.d("Json Init", "$name\n$place_id\n$address\n$price_level\n$rating\n$opening_now\n$url\n$latitude, $longitude")
                     }
-                    callback()
+
+                    var nextPageToken = ""
+                    if(response.has("next_page_token")){
+                        nextPageToken = response.getString("next_page_token")
+                    }
+                    callback(nextPageToken)
 
                 }
                 }, Response.ErrorListener { error -> error.printStackTrace() })
             return request
         }
+
 
         fun placeDetailsPhotosRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
             val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=photos&key=$API_KEY"
@@ -115,6 +137,11 @@ class APIHelper {
                 Request.Method.GET, url, null,
                 Response.Listener<JSONObject?>() {
                         response -> if (response != null) {
+
+                    if(response.has("error_message")){
+                        Log.e("APIHelper", response.getString("error_message"))
+                    }
+
                     try{
                         val result = response.getJSONObject("result")
                         val photos = result.getJSONArray("photos")
@@ -137,6 +164,11 @@ class APIHelper {
                 Request.Method.GET, url, null,
                 Response.Listener<JSONObject?>() {
                         response -> if (response != null) {
+
+                    if(response.has("error_message")){
+                        Log.e("APIHelper", response.getString("error_message"))
+                    }
+
                     var international_phone_number= ""
                     var website = ""
                     try{
