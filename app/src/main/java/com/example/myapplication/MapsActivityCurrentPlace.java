@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -110,10 +109,10 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // Retrieve location and camera position from saved instance state.
-//        if (savedInstanceState != null) {
-//            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-//            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-//        }
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
 
         // Retrieve the content view that renders the map.
         setContentView(R.layout.custom_info_contents);
@@ -274,7 +273,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
-                            if (mLastKnownLocation != null || mySettings.locationOfUser != null) {
+                            if (mLastKnownLocation != null) {
                                 InitializeMarker();
                             }
                         } else {
@@ -464,7 +463,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 mLastKnownLocation = null;
-//                getLocationPermission();
+                getLocationPermission();
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());

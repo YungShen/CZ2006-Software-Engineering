@@ -4,16 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-
-
-
 
 class FinalActivity : AppCompatActivity() {
 
@@ -22,11 +18,10 @@ class FinalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var restaurant = getIntent().getSerializableExtra("restaurant_to_final") as Restaurant
+        var restaurant = intent.getSerializableExtra("restaurant_to_final") as Restaurant
 
         setContentView(R.layout.activity_final)
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        //setSupportActionBar(findViewById(R.id.FinalToolbar))
         adapter = PhotoListAdapter()
         photoPager = findViewById(R.id.final_photo_pager)
         photoPager.adapter = adapter
@@ -39,32 +34,30 @@ class FinalActivity : AppCompatActivity() {
             adapter.setItemList(it.toList())
         })
         requestQueue.add(APIHelper.placeDetailsOthersRequest(restaurant.place_id) { phone: String, web: String ->
-            val website = web
-            val phoneNum = phone
-            val direction_button=findViewById(R.id.ReservationButton) as Button
+            val direction_button= findViewById<Button>(R.id.ReservationButton)
             direction_button.setOnClickListener {
-                if(website != ""){
-                    makeReservation(website)
+                if(web != ""){
+                    makeReservation(web)
                 }else{
                     Toast.makeText(this@FinalActivity,"No website available", Toast.LENGTH_SHORT).show()
                 }
             }
             val phoneView = findViewById<TextView>(R.id.PhoneNumber)
-            phoneView.text = phoneNum
+            phoneView.text = phone
             val websiteView = findViewById<TextView>(R.id.RestaurantWebsite)
-            websiteView.text = website
+            websiteView.text = web
         })
 
 
-        val r_name = findViewById(R.id.RestaurantName) as TextView
+        val r_name = findViewById<TextView>(R.id.RestaurantName)
         r_name.text=restaurant.name
-        val r_address = findViewById(R.id.RestaurantAddress) as TextView
+        val r_address = findViewById<TextView>(R.id.RestaurantAddress)
         r_address.text=restaurant.address
 
-        val r_rating = findViewById(R.id.RestaurantRating)as RatingBar
+        val r_rating = findViewById<RatingBar>(R.id.RestaurantRating)
         r_rating.rating =restaurant.rating.toFloat()
-        val r_opening = findViewById(R.id.RestaurantOpeningHours) as TextView
-        if(restaurant.opening_now==true )
+        val r_opening = findViewById<TextView>(R.id.RestaurantOpeningHours)
+        if(restaurant.opening_now)
         {
             r_opening.text="Opening Now"
         }
@@ -72,7 +65,7 @@ class FinalActivity : AppCompatActivity() {
         {
             r_opening.text="Closes"
         }
-        val r_pricing = findViewById(R.id.RestaurantPricing) as TextView
+        val r_pricing = findViewById<TextView>(R.id.RestaurantPricing)
         if(restaurant.price_level==-1)
         {
             r_pricing.text="Not Applicable"
@@ -97,7 +90,7 @@ class FinalActivity : AppCompatActivity() {
     }
 
     // Action to be performed when "Directions" is clicked
-    fun sendMessage(view: View?) {
+    fun sendMessage() {
         val activityChangeIntent =
             Intent(this@FinalActivity, GetDirections::class.java)
         this@FinalActivity.startActivity(activityChangeIntent)

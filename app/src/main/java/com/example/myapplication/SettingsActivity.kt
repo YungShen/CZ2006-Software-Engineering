@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ktx.database
@@ -26,7 +25,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_page_2)
-        val distance_value = findViewById(R.id.DistanceValue) as TextView
+        val distance_value = findViewById<TextView>(R.id.DistanceValue)
         distance_value.text=distance.toString()
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -59,31 +58,31 @@ class SettingsActivity : AppCompatActivity() {
         })
 
         val logout = findViewById<Button>(R.id.LogoutButton)
-        logout.setOnClickListener(
-            View.OnClickListener {
-                val intent = Intent(this, Login::class.java)
-                startActivity(intent)
-            }
-        )
-
+        logout.setOnClickListener {
+            val intent = Intent(this, Login::class.java)
+            finish()
+            startActivity(intent)
+        }
+        val cancel = findViewById<Button>(R.id.CancelButton)
+        cancel.setOnClickListener {
+            onBackPressed()
+        }
         val save = findViewById<Button>(R.id.SaveButton)
-        save.setOnClickListener(
-            View.OnClickListener {
-                saveSettings()
-                var settingsChanged = false
-                if(halal != halalCopy || veg != vegCopy || distance != distanceCopy){
-                    settingsChanged = true
-                }
-                Log.d("SettingsActivity.kt", "settingsChanged passing to Main_Page: $settingsChanged")
-                setResult(Activity.RESULT_OK, Intent().putExtra("settingsChanged", settingsChanged))
-                finish()
+        save.setOnClickListener {
+            saveSettings()
+            var settingsChanged = false
+            if(halal != halalCopy || veg != vegCopy || distance != distanceCopy){
+                settingsChanged = true
             }
-        )
+            Log.d("SettingsActivity.kt", "settingsChanged passing to Main_Page: $settingsChanged")
+            setResult(Activity.RESULT_OK, Intent().putExtra("settingsChanged", settingsChanged))
+            finish()
+        }
 
     }
 
 
-    fun saveSettings(){
+    private fun saveSettings(){
         // save
         val database = Firebase.database
         val databaseUsers = database.getReference("Users")

@@ -8,7 +8,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
-import org.json.JSONObject
 
 class SingletonObjects constructor(context: Context){
     companion object {
@@ -36,18 +35,18 @@ class APIHelper {
         private var latitude = mySettings.locationOfUser.latitude
         private var longitude = mySettings.locationOfUser.longitude
 
-        fun adjustToUserSettings(){
+        private fun adjustToUserSettings(){
             latitude = mySettings.locationOfUser.latitude
             longitude = mySettings.locationOfUser.longitude
             radius = mySettings.radius*1000
-            if(mySettings.halal && mySettings.vegetarian){
-                keyword = "halal,vegetarian"
+            keyword = if(mySettings.halal && mySettings.vegetarian){
+                "halal,vegetarian"
             }else if(mySettings.halal){
-                keyword = "halal"
+                "halal"
             }else if(mySettings.vegetarian){
-                keyword = "vegetarian"
+                "vegetarian"
             }else{
-                keyword = ""
+                ""
             }
         }
 
@@ -66,12 +65,14 @@ class APIHelper {
             }
             Log.d("APIHelper.kt", "Performs search at $url")
 
-            val request = JsonObjectRequest(
+            return JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener<JSONObject?>() { response -> if(response != null){
+                Response.Listener { response -> if(response != null){
 
                     if(response.has("error_message")){
                         Log.e("APIHelper", response.getString("error_message"))
+                    }else if(response.getString("status") != "OK"){
+                        Log.e("APIHelper", response.getString("status"))
                     }
 
                     val results = response.getJSONArray("results")
@@ -86,8 +87,8 @@ class APIHelper {
 
                         var price_level : Int = -1
                         var rating : Double = -1.0
-                        var user_ratings_total : Int = -1
-                        var opening_now : Boolean = true
+                        var user_ratings_total = -1
+                        var opening_now = true
 
                         if(restaurant.has("price_level")){
                             price_level = restaurant.getInt("price_level")
@@ -102,7 +103,7 @@ class APIHelper {
                             opening_now = restaurant.getBoolean("opening_now")
                         }
                         var photos: JSONArray
-                        var photoUrl: String = "https://www.nicepng.com/png/detail/214-2148603_you-eat-ready-to-eat-food-icon.png"
+                        var photoUrl = "https://www.nicepng.com/png/detail/214-2148603_you-eat-ready-to-eat-food-icon.png"
                         if(restaurant.has("photos")) {
                             photos = restaurant.getJSONArray("photos")
                             if (photos.length() != 0) {
@@ -118,24 +119,23 @@ class APIHelper {
                         )
                     }
 
-                    var nextPageToken = ""
+                    var nextPage = ""
                     if(response.has("next_page_token")){
-                        nextPageToken = response.getString("next_page_token")
+                        nextPage = response.getString("next_page_token")
                     }
-                    callback(nextPageToken)
+                    callback(nextPage)
 
                 }
                 }, Response.ErrorListener { error -> error.printStackTrace() })
-            return request
         }
 
 
         fun placeDetailsPhotosRequest(place_id: String, callback: (photoRefs: MutableList<String>) -> Unit) : JsonObjectRequest {
             val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=photos&key=$API_KEY"
             val placePhotos = mutableListOf<String>()
-            val request = JsonObjectRequest(
+            return JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener<JSONObject?>() {
+                Response.Listener() {
                         response -> if (response != null) {
 
                     if(response.has("error_message")){
@@ -155,14 +155,13 @@ class APIHelper {
                     }
                 }
                 }, Response.ErrorListener { error -> error.printStackTrace() })
-            return request
         }
 
         fun placeDetailsOthersRequest(place_id: String, callback: (phoneNum : String, website: String) -> Unit) : JsonObjectRequest {
             val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=international_phone_number,website&key=$API_KEY"
-            val request = JsonObjectRequest(
+            return JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener<JSONObject?>() {
+                Response.Listener() {
                         response -> if (response != null) {
 
                     if(response.has("error_message")){
@@ -185,15 +184,13 @@ class APIHelper {
                     callback(international_phone_number, website)
                 }
                 }, Response.ErrorListener { error -> error.printStackTrace() })
-            return request
         }
 
 
         fun getPhotoUrl(photo_reference : String) : String{
             val maxWidth = 400
             val maxHeight = 400
-            var url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxHeight=$maxHeight&photoreference=$photo_reference&key=$API_KEY"
-            return url
+            return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=$maxWidth&maxHeight=$maxHeight&photoreference=$photo_reference&key=$API_KEY"
         }
 
         fun getPhotoReferenceFromUrl(photoUrl : String) : String{

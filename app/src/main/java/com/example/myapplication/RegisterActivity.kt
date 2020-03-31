@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database
@@ -18,7 +16,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
 
     companion object {
-        val TAG = "RegisterActivity"
+        const val TAG = "RegisterActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +77,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
 
                 //to Success Page
-                toLogin(view)
+                toLogin()
             }
             .addOnFailureListener{
                 Log.d(TAG, "Failed to create user: ${it.message}")
@@ -90,8 +88,8 @@ class RegisterActivity : AppCompatActivity() {
     class User(val uid: String, val username: String)
 
     //create new User settings
-    val database = Firebase.database
-    val databaseNewUser = database.getReference("Users")
+    private val database = Firebase.database
+    private val databaseNewUser = database.getReference("Users")
 
     private fun writeNewUser(userId: String) {
         val userSettings = UserSettings(userId, false, false, 1)
@@ -101,16 +99,16 @@ class RegisterActivity : AppCompatActivity() {
     // validate input
     fun validateUser(view: View){
         // some checks
-        displaySuccess(view)
+        displaySuccess()
     }
 
-    private fun displaySuccess(view: View){
+    private fun displaySuccess() {
         val intent = Intent(this, ResetLinkActivity::class.java)
         finish()
         startActivity(intent)
     }
 
-    fun toLogin(view: View){
+    private fun toLogin() {
         val intent = Intent(this, Login::class.java)
         startActivity(intent)
     }

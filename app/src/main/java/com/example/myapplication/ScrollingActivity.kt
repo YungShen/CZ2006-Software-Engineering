@@ -1,13 +1,10 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 
 
 class ScrollingActivity : AppCompatActivity() {
@@ -17,7 +14,7 @@ class ScrollingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        var restaurant = getIntent().getSerializableExtra("restaurant_to_pass") as Restaurant
+        var restaurant = intent.getSerializableExtra("restaurant_to_pass") as Restaurant
         place_id = restaurant.place_id
 
 
@@ -25,15 +22,15 @@ class ScrollingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_scrolling)
 
 
-        val r_name = findViewById(R.id.RestaurantName) as TextView
+        val r_name = findViewById<TextView>(R.id.RestaurantName)
         r_name.text=restaurant.name
-        val r_address = findViewById(R.id.RestaurantAddress) as TextView
+        val r_address = findViewById<TextView>(R.id.RestaurantAddress)
         r_address.text=restaurant.address
 
-        val r_rating = findViewById(R.id.RestaurantRating)as RatingBar
+        val r_rating = findViewById<RatingBar>(R.id.RestaurantRating)
         r_rating.rating =restaurant.rating.toFloat()
-        val r_opening = findViewById(R.id.RestaurantOpeningHours) as TextView
-        if(restaurant.opening_now==true )
+        val r_opening = findViewById<TextView>(R.id.RestaurantOpeningHours)
+        if(restaurant.opening_now)
         {
             r_opening.text="Opening Now"
         }
@@ -41,7 +38,7 @@ class ScrollingActivity : AppCompatActivity() {
         {
             r_opening.text="Closes"
         }
-        val r_pricing = findViewById(R.id.RestaurantPricing) as TextView
+        val r_pricing = findViewById<TextView>(R.id.RestaurantPricing)
         if(restaurant.price_level==-1)
         {
             r_pricing.text="Not Applicable"

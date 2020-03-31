@@ -67,7 +67,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             { setRestaurantCallback(it) },
             ""))
         val userAddress = intent.getStringExtra("user_address")
-        val textView: TextView = findViewById<TextView>(R.id.LocationText)
+        val textView: TextView = findViewById(R.id.LocationText)
         textView.text = userAddress
     }
 
@@ -127,7 +127,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     override fun onCardSwiped(direction: Direction) {
         if(direction == Direction.Right || direction == Direction.Top){
-            if(!(restaurantsFromAPI[currentRestaurant] in shortlistedRestaurants)){
+            if(restaurantsFromAPI[currentRestaurant] !in shortlistedRestaurants){
                 shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
             }
             Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
@@ -207,17 +207,15 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             val intent = Intent(this, MapsActivityCurrentPlace::class.java)
             startActivityForResult(intent, MAP_ACTIVITY_REQUEST_CODE)
         }
-        button = findViewById<Button>(R.id.ViewShortlistedButton)
-        button.setOnClickListener(
-            View.OnClickListener {
-                goToShortlisted()
-            }
-        )
-        button = findViewById<Button>(R.id.NotIncreaseRadiusButton)
+        button = findViewById(R.id.ViewShortlistedButton)
         button.setOnClickListener {
             goToShortlisted()
         }
-        button = findViewById<Button>(R.id.IncreaseRadiusButton)
+        button = findViewById(R.id.NotIncreaseRadiusButton)
+        button.setOnClickListener {
+            goToShortlisted()
+        }
+        button = findViewById(R.id.IncreaseRadiusButton)
         button.setOnClickListener {
             if(mySettings.radius < 5){
                 mySettings.radius += 1
@@ -239,7 +237,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 cardStackView.swipe()
             }
         }
-        imageButton = findViewById<ImageButton>(R.id.ShortlistButton)
+        imageButton = findViewById(R.id.ShortlistButton)
         imageButton.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()
@@ -251,7 +249,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 cardStackView.swipe()
             }
         }
-        button = findViewById<Button>(R.id.SuperlikeButton)
+        button = findViewById(R.id.SuperlikeButton)
         button.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()

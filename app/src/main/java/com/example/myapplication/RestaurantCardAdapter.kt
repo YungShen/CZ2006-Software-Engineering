@@ -1,14 +1,11 @@
 package com.example.myapplication
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -16,30 +13,6 @@ import com.bumptech.glide.Glide
 // not sure what is this for
 import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
-
-class SpotDiffCallback(
-    private val old: MutableList<Restaurant>,
-    private val new: MutableList<Restaurant>
-) : DiffUtil.Callback() {
-
-    override fun getOldListSize(): Int {
-        return old.size
-    }
-
-    override fun getNewListSize(): Int {
-        return new.size
-    }
-
-    override fun areItemsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return old[oldPosition].place_id == new[newPosition].place_id
-    }
-
-    override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-        return old[oldPosition] == new[newPosition]
-    }
-
-}
-// not sure what above code is for
 
 
 class CardStackAdapter(
@@ -74,19 +47,6 @@ class CardStackAdapter(
 
     fun setRestaurants(restaurants: MutableList<Restaurant>) {
         this.restaurants = restaurants
-        notifyDataSetChanged()
-    }
-
-    fun getRestaurants(): MutableList<Restaurant> {
-        return restaurants
-    }
-
-    fun getRestaurant(): Restaurant {
-        return restaurants[0]
-    }
-
-    fun removeRestaurant(){
-        restaurants.removeAt(0)
         notifyDataSetChanged()
     }
 

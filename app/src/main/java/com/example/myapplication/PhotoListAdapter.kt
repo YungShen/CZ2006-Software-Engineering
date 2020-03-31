@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 
 class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
 
-    private var photos : List<String> = listOf()
+    private var photos = mutableListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         return PhotoViewHolder(parent)
@@ -22,7 +22,12 @@ class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
     }
 
     fun setItemList(photos: List<String>) {
-        this.photos = photos
+        this.photos = photos as MutableList<String>
+        notifyDataSetChanged()
+    }
+
+    fun addItemToList(photo: String){
+        photos.add(photo)
         notifyDataSetChanged()
     }
 

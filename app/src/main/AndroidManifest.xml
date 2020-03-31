@@ -47,9 +47,6 @@
             android:exported="true"
             android:parentActivityName=".ShortlistedRestaurantsActivity" />
         <activity
-            android:name=".History"
-            android:parentActivityName=".ShortlistedRestaurantsActivity" />
-        <activity
             android:name=".MapsActivityCurrentPlace"
             android:label="@string/title_activity_maps"
             android:parentActivityName=".Main_Page">

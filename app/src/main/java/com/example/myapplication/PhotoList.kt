@@ -3,18 +3,17 @@ package com.example.myapplication
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import java.util.Collections.addAll
 
 
 class PhotoList : Fragment() {
@@ -23,10 +22,14 @@ class PhotoList : Fragment() {
     private lateinit var place_id : String
 
     private lateinit var ref: DatabaseReference
+    private val database = Firebase.database
+    private val databaseRes = database.getReference("Restaurant")
     private var vote: Int = 0
 
     companion object {
         const val TAG = "Voting"
+        const val MAX_PHOTO = 5
+        const val MAX_VOTED_PHOTO = 3
     }
 
     override fun onCreateView(
@@ -46,66 +49,73 @@ class PhotoList : Fragment() {
 
         val requestQueue = SingletonObjects.getInstance(this.requireContext()).requestQueue
         requestQueue.add(APIHelper.placeDetailsPhotosRequest(place_id
-        ) {
-            val displayPhotoList = it
-//            if(it.size > 5){
-//                // getting 5 random first, then append to the list of fixed best-voted (size <= 3) and slice into size = 5 later
-//                val randomList = (0..it.size).shuffled().take(5)
-//
-//                val photoVote = mutableListOf<Int>()
-//                for(i in 0 until it.size){
-//                    getVote(place_id, it[i])
-//                    photoVote.add(vote)
-//                }
-//                val toBeDisplayed = listOf<Boolean>()
-//                val photoVoteCopy = listOf<Int>().apply{ addAll(photoVote) }
-//
-//                for(i in 0 until it.size){
-//
-//                }
-//                // what if all photo is voted negative?
-//
-//            }
-            for(i in 0 until displayPhotoList.size){
-                displayPhotoList[i] = APIHelper.getPhotoUrl(displayPhotoList[i])
-            }
-            adapter.setItemList(displayPhotoList.toList())
+        ) { photoRefs ->
+            // the returned list is a bunch of photoReferences, not urls
+            if (photoRefs.size < MAX_PHOTO) {
+                setPhotoUrlsToAdapter(photoRefs)
+            } else {
+                photoRefs.shuffle()
+                // dynamically insert to the adapter if the vote is not negative
+                photoRefs.forEach { item ->
+                    getVote(place_id, item) { numVote, photoRef -> addToAdapterCallback(numVote, photoRef) }
+                }
 
-            // if it.size > 5
-            // get current database votes
-            // calculate how many to randomize
-            // exclude the photos that has either positive or negative votes in the database
-            // randomize the remaining photos
-            // pass the list to the adapter
+            }
+
+//                val photosWithVote = ConcurrentLinkedQueue<PhotoWithVote>()
+//                runBlocking {
+//
+//                    photoRefs.forEach {item ->
+//                        launch(Dispatchers.Default){
+//                            getVote(place_id, item)
+//                            // hard coded super long delay still sometimes don't work zzz
+//                            delay(5000)
+//                            photosWithVote.add(PhotoWithVote(item, vote))
+//                            Log.d("PhotoList.kt", "photosWithVote inserted photo of vote ${photosWithVote.last().vote}")
+//                        }
+//                    }
+//                }
+//                photosWithVote.forEach {
+//                        item -> println("photosWithVote's vote: ${item.vote}")
+//                }
+//                setSortedWithRandomizedPhotos(photoRefs, photosWithVote)
         })
 
         val upvote = view.findViewById<Button>(R.id.UpvoteButton)
         upvote.setOnClickListener {
-            upvotePhoto(place_id, getCurPhotoReference())
+            val photoRef = getCurPhotoReference()
+            upvotePhoto(place_id, photoRef)
         }
         val downvote = view.findViewById<Button>(R.id.DownvoteButton)
         downvote.setOnClickListener{
-            downvotePhoto(place_id, getCurPhotoReference())
+            val photoRef = getCurPhotoReference()
+            downvotePhoto(place_id, photoRef)
         }
     }
 
-    private fun getCurPhotoReference() : String{
-        val photoUrl = adapter.getItemUrlAt(photoPager.currentItem)
-        val photoReference = APIHelper.getPhotoReferenceFromUrl(photoUrl)
-        Log.d("PhotoList.kt", "from $photoUrl to $photoReference")
-        return photoReference
+    private fun addToAdapterCallback(numVote: Int, photoRef: String){
+        if(numVote >= 0 && adapter.itemCount < MAX_PHOTO){
+            adapter.addItemToList(APIHelper.getPhotoUrl(photoRef))
+        }
     }
 
     //get vote
-    fun getVote(placeId: String, photoId: String){
+    private fun getVote(placeId: String, photoRef: String, callback: (Int, String)->Unit){
         ref = FirebaseDatabase.getInstance().getReference("Restaurant")
 
-        ref.addValueEventListener(object : ValueEventListener {
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if(dataSnapshot.child(placeId).child(photoId)!!.exists()) {
-                    vote = dataSnapshot.child(placeId).child(photoId).getValue<Int>()!!
-                }else{
+                if (dataSnapshot.child(placeId).child(photoRef)!!.exists()) {
                     vote = 0
+                    for (u in dataSnapshot.child(placeId).child(photoRef).children) {
+                        Log.d("getVote", "Vote before: $vote")
+                        vote += u.getValue<Int>()!!
+                        Log.d("getVote", "Vote after: $vote")
+                    }
+                    Log.d("getVote", "The vote is: $vote")
+                    callback(vote, photoRef)
+                }else{
+                    callback(0, photoRef)
                 }
             }
 
@@ -116,20 +126,67 @@ class PhotoList : Fragment() {
             }
         })
     }
-    // vote photo
-    val database = Firebase.database
-    val databaseRes = database.getReference("Restaurant")
 
     //function to add vote to photo
-    fun upvotePhoto(placeId: String, photoId: String){
-        getVote(placeId, photoId)
-        databaseRes.child(placeId).child(photoId).setValue(vote+1)
+    private fun upvotePhoto(placeId: String, photoId: String){
+        databaseRes.child(placeId).child(photoId).child(mySettings.uid).setValue(1)
     }
 
-    fun downvotePhoto(placeId: String, photoId: String){
-        getVote(placeId, photoId)
-        databaseRes.child(placeId).child(photoId).setValue(vote-1)
+    private fun downvotePhoto(placeId: String, photoId: String){
+        val key = databaseRes.child(placeId).child(photoId).push().key
+        databaseRes.child(placeId).child(photoId).child(mySettings.uid).setValue(-1)
     }
+
+//    @RequiresApi(Build.VERSION_CODES.N)
+//    fun setSortedWithRandomizedPhotos(it: MutableList<String>, photosWithVote: ConcurrentLinkedQueue<PhotoWithVote>) {
+//
+//        Log.d("PhotoList.kt", "In setSortedWithRandomizedPhotos")
+//        Log.d("PhotoList.kt", "photosWithVote.size = ${photosWithVote.size}")
+//
+//        val sortedList = photosWithVote.sortedBy { item-> item.vote }
+//
+//        val displayPhotoList = mutableListOf<String>()
+//        for(i in 0 until MAX_VOTED_PHOTO){
+//            if(sortedList[i].vote > 0){
+//                displayPhotoList.add(sortedList[i].photoRef)
+//                Log.d("PhotoList.kt", "Added photo of vote ${sortedList[i].vote}")
+//            }else{
+//                Log.d("PhotoList.kt", "This photo is of ${sortedList[i].vote}, break")
+//                break
+//            }
+//        }
+//        val notUsedPhotos = sortedList.subList(fromIndex = displayPhotoList.size, toIndex = photosWithVote.size)
+//        val nonNegList = notUsedPhotos.filter { item-> item.vote >= 0 }
+//        val numToRandom = MAX_PHOTO-displayPhotoList.size
+//        if(nonNegList.size > numToRandom){
+//            val randomList = (0 until nonNegList.size).shuffled().take(numToRandom)
+//            for(i in 0 until numToRandom){
+//                displayPhotoList.add(nonNegList[randomList[i]].photoRef)
+//            }
+//        }else{
+//            for(i in 0 until nonNegList.size){
+//                displayPhotoList.add(nonNegList[i].photoRef)
+//            }
+//        }
+//        setPhotoUrlsToAdapter(displayPhotoList)
+//    }
+
+    private fun setPhotoUrlsToAdapter(photoRefs : MutableList<String>){
+        for(i in 0 until photoRefs.size){
+            photoRefs[i] = APIHelper.getPhotoUrl(photoRefs[i])
+        }
+        adapter.setItemList(photoRefs.toList())
+    }
+
+    private fun getCurPhotoReference() : String{
+        val photoUrl = adapter.getItemUrlAt(photoPager.currentItem)
+        return APIHelper.getPhotoReferenceFromUrl(photoUrl)
+    }
+
 
 }
 
+//data class PhotoWithVote(
+//    val photoRef : String,
+//    val vote: Int
+//)
