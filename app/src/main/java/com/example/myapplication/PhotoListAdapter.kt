@@ -34,6 +34,9 @@ class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
     override fun getItemCount(): Int = photos.size
 
     fun getItemUrlAt(position: Int) : String{
+        if(position >= photos.size){
+            return ""
+        }
         return photos[position]
     }
 

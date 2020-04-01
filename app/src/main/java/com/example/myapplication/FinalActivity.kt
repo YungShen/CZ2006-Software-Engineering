@@ -93,7 +93,7 @@ class FinalActivity : AppCompatActivity() {
     // Action to be performed when "Directions" is clicked
     fun sendMessage(view: View) {
         val activityChangeIntent =
-            Intent(this@FinalActivity, GetDirections::class.java)
+            Intent(this, GetDirections::class.java)
         this@FinalActivity.startActivity(activityChangeIntent)
     }
     fun makeReservation(website:String) {

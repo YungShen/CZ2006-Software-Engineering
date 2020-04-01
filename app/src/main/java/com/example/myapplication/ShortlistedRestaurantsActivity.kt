@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.random.Random
@@ -36,10 +37,14 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
 
         val randomPick = findViewById<Button>(R.id.RandomPickButton)
         randomPick.setOnClickListener {
-            val randomInt = Random.nextInt(shortlistedrestaurants.size)
-            val intent = Intent(this, FinalActivity::class.java)
-                .putExtra("restaurant_to_final", viewAdapter.getRestaurants()[randomInt])
-            startActivity(intent)
+            if(shortlistedrestaurants.size != 0){
+                val randomInt = Random.nextInt(shortlistedrestaurants.size)
+                val intent = Intent(this, FinalActivity::class.java)
+                    .putExtra("restaurant_to_final", viewAdapter.getRestaurants()[randomInt])
+                startActivity(intent)
+            }else{
+                Toast.makeText(this@ShortlistedRestaurantsActivity,"Your have not shortlisted any restaurants yet!", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

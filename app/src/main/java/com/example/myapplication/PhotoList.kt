@@ -180,6 +180,9 @@ class PhotoList : Fragment() {
 
     private fun getCurPhotoReference() : String{
         val photoUrl = adapter.getItemUrlAt(photoPager.currentItem)
+        if(photoUrl == ""){
+            return ""
+        }
         return APIHelper.getPhotoReferenceFromUrl(photoUrl)
     }
 
