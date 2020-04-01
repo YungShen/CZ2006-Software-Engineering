@@ -128,10 +128,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     override fun onCardSwiped(direction: Direction) {
         if(direction == Direction.Right || direction == Direction.Top){
-            if(restaurantsFromAPI[currentRestaurant] !in shortlistedRestaurants){
-                shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
+            var shortlistedPreviously = false
+            for(i in 0 until shortlistedRestaurants.size){
+                if(restaurantsFromAPI[currentRestaurant].place_id == shortlistedRestaurants[i].place_id){
+                    shortlistedPreviously = true
+                }
             }
-            Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
+            if(!shortlistedPreviously){
+                shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
+                Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
+            }
         }
         if(direction == Direction.Top){
             val intent = Intent(this, FinalActivity::class.java).putExtra("restaurant_to_final",restaurantsFromAPI[currentRestaurant])

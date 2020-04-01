@@ -14,12 +14,18 @@ class ScrollingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        var restaurant = intent.getSerializableExtra("restaurant_to_pass") as Restaurant
+        val restaurant = intent.getSerializableExtra("restaurant_to_pass") as Restaurant
         place_id = restaurant.place_id
 
-
-
         setContentView(R.layout.activity_scrolling)
+
+        val requestQueue = SingletonObjects.getInstance(this).requestQueue
+        requestQueue.add(APIHelper.placeDetailsOthersRequest(restaurant.place_id) { phone: String, web: String ->
+            val phoneView = findViewById<TextView>(R.id.PhoneNumber)
+            phoneView.text = phone
+            val websiteView = findViewById<TextView>(R.id.RestaurantWebsite)
+            websiteView.text = web
+        })
 
 
         val r_name = findViewById<TextView>(R.id.RestaurantName)
@@ -47,6 +53,8 @@ class ScrollingActivity : AppCompatActivity() {
         {
             r_pricing.text="$".repeat(restaurant.price_level)
         }
+        val phoneView = findViewById<TextView>(R.id.PhoneNumber)
+        val websiteView = findViewById<TextView>(R.id.RestaurantWebsite)
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
