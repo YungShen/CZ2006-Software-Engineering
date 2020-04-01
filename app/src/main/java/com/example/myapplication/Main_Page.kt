@@ -40,6 +40,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     private val SETTINGS_ACTIVITY_REQUEST_CODE = 0
     private val MAP_ACTIVITY_REQUEST_CODE = 1
+    private val SHORTLISTED_ACTIVITY_REQUEST_CODE = 2
 
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
@@ -123,6 +124,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                     reSearch()
                 }
             }
+        }else if(requestCode == SHORTLISTED_ACTIVITY_REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                val arr  = intent.getSerializableExtra("restaurant_list_to_pass_back")
+                if(arr != null){
+                    shortlistedRestaurants = arr as ArrayList<Restaurant>
+                }else{
+                    shortlistedRestaurants = ArrayList<Restaurant>()
+                }
+                Log.d("Main_Page.kt", "passed back shortlisted restaurant of length ${shortlistedRestaurants.size}")
+            }
         }
     }
 
@@ -201,7 +212,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         fun goToShortlisted(){
             val intent = Intent(this, ShortlistedRestaurantsActivity::class.java)
             intent.putExtra("restaurant_list_to_pass", shortlistedRestaurants )
-            startActivity(intent)
+            startActivityForResult(intent, SHORTLISTED_ACTIVITY_REQUEST_CODE)
         }
 
         var button = findViewById<Button>(R.id.SettingsButton)

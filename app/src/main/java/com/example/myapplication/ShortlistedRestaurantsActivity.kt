@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -50,6 +51,7 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         android.R.id.home -> {
+            setResult(Activity.RESULT_OK, Intent().putExtra("restaurant_list_to_pass_back", viewAdapter.getRestaurants()))
             onBackPressed()
             true
         }
