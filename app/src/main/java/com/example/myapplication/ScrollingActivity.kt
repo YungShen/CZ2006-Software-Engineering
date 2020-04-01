@@ -41,7 +41,7 @@ class ScrollingActivity : AppCompatActivity() {
         val r_pricing = findViewById<TextView>(R.id.RestaurantPricing)
         if(restaurant.price_level==-1)
         {
-            r_pricing.text="Not Applicable"
+            r_pricing.text="Price: Not Applicable"
         }
         else
         {

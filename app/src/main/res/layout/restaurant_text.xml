@@ -55,7 +55,6 @@
         android:id="@+id/PhoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="-"
         android:textColor="#6A6969"
         android:textSize="18sp" />
 
@@ -70,7 +69,6 @@
         android:id="@+id/RestaurantWebsite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="-"
         android:textSize="14sp" />
 
 </LinearLayout>

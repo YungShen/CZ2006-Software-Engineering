@@ -103,7 +103,7 @@ class APIHelper {
                             opening_now = restaurant.getBoolean("opening_now")
                         }
                         var photos: JSONArray
-                        var photoUrl = "https://www.nicepng.com/png/detail/214-2148603_you-eat-ready-to-eat-food-icon.png"
+                        var photoUrl = "https://i.imgur.com/HvaA8JM.png"
                         if(restaurant.has("photos")) {
                             photos = restaurant.getJSONArray("photos")
                             if (photos.length() != 0) {
