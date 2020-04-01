@@ -39,7 +39,7 @@ class ForgetPasswordActivity : AppCompatActivity() {
 
         auth.sendPasswordResetEmail(email).addOnCompleteListener {
             if (it.isSuccessful){
-                Toast.makeText(this, "Password sent to your email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Reset password link had sent to your email", Toast.LENGTH_SHORT).show()
             }
         }.addOnFailureListener {
             Toast.makeText(this, "Failed to send password to email: ${it.message}", Toast.LENGTH_SHORT).show()
