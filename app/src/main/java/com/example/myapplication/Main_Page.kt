@@ -117,7 +117,8 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 val address = data!!.getStringExtra("user_address")
                 val textView: TextView = findViewById(R.id.LocationText)
 
-                if(address != null){
+                if(address != null && address != ""){
+                    Log.d("Main_Page.kt", "address is $address")
                     textView.text = address
                     reSearch()
                 }

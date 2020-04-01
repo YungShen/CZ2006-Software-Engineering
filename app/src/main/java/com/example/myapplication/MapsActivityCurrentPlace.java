@@ -559,7 +559,7 @@ public class MapsActivityCurrentPlace extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            setResult(Activity.RESULT_OK, new Intent().putExtra("user_address", ""));
+            setResult(Activity.RESULT_OK, new Intent().putExtra("user_address", address));
             onBackPressed();
             return true;
         }

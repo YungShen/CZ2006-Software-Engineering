@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
@@ -90,7 +91,7 @@ class FinalActivity : AppCompatActivity() {
     }
 
     // Action to be performed when "Directions" is clicked
-    fun sendMessage() {
+    fun sendMessage(view: View) {
         val activityChangeIntent =
             Intent(this@FinalActivity, GetDirections::class.java)
         this@FinalActivity.startActivity(activityChangeIntent)
