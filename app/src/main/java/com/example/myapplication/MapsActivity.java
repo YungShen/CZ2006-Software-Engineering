@@ -216,6 +216,7 @@ public class MapsActivity extends AppCompatActivity implements
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
+                if(userLocation!=null) {userLocation.remove();}
                 mMap.moveCamera(CameraUpdateFactory
                         .newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM));
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
@@ -229,6 +230,23 @@ public class MapsActivity extends AppCompatActivity implements
             @Override
             public void onError(Status status) {
                 Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng latlng) {
+                // TODO Auto-generated method stub
+
+                if (userLocation != null) {
+                    userLocation.remove();
+                }
+                userLocation = mMap.addMarker(new MarkerOptions()
+                        .position(latlng)
+                        .draggable(true));
+                System.out.println(latlng);
+
             }
         });
 
