@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
@@ -58,11 +59,15 @@ class PhotoList : Fragment() {
         upvote.setOnClickListener {
             val photoRef = getCurPhotoReference()
             upvotePhoto(place_id, photoRef)
+            Toast.makeText(activity, "Your voting response will be recorded.",
+                Toast.LENGTH_SHORT).show()
         }
         val downvote = view.findViewById<Button>(R.id.DownvoteButton)
         downvote.setOnClickListener{
             val photoRef = getCurPhotoReference()
             downvotePhoto(place_id, photoRef)
+            Toast.makeText(activity, "Your voting response will be recorded.",
+                Toast.LENGTH_SHORT).show()
         }
     }
 
