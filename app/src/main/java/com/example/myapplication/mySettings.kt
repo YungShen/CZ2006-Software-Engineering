@@ -10,5 +10,5 @@ object mySettings {
     var vegetarian: Boolean = false
     var radius: Int = 1
     lateinit var locationOfUser: LatLng
-
+    lateinit var locationOfRestaurant: LatLng
 }

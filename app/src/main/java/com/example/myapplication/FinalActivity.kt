@@ -4,13 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.activity_final.*
 import kotlinx.android.synthetic.main.restaurant_text.*
 
@@ -58,10 +56,19 @@ class FinalActivity : AppCompatActivity() {
         setupRestaurantText(restaurant)
 
         DirectionButton.setOnClickListener {
-            val intent =
-                Intent(this, GetDirectionsActivity::class.java)
-            intent.putExtra("latitude", restaurant.latitude)
-            intent.putExtra("longitude", restaurant.longitude)
+//            val intent =
+//                Intent(this, GetDirectionsActivity::class.java)
+//            intent.putExtra("latitude", restaurant.latitude)
+//            intent.putExtra("longitude", restaurant.longitude)
+//            startActivity(intent)
+            val temp:LatLng =  LatLng(restaurant.latitude,restaurant.longitude)
+            mySettings.locationOfRestaurant = temp
+            val destinationURL =
+                "http://maps.google.com/maps?saddr=" + mySettings.locationOfUser.latitude + "," + mySettings.locationOfUser.longitude + "&daddr=" + lat + "," + lng
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(destinationURL)
+            )
             startActivity(intent)
         }
 
