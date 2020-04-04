@@ -20,7 +20,7 @@ class ShortlistedRestaurantAdapter (private val shortlistedItems:ArrayList<Resta
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val shortlistedItemView = inflater.inflate(R.layout.shortlisted_item, parent,false)
+        val shortlistedItemView = inflater.inflate(R.layout.item_shortlisted, parent,false)
         return ViewHolder(shortlistedItemView)
     }
 

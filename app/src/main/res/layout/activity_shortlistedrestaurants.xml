@@ -8,22 +8,13 @@
     android:orientation="vertical"
     tools:context=".ShortlistedRestaurantsActivity">
 
-    <!--    <androidx.appcompat.widget.Toolbar-->
-    <!--        android:id="@+id/ShortlistedToolbar"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:background="?attr/colorPrimary"-->
-    <!--        android:minHeight="?attr/actionBarSize"-->
-    <!--        android:theme="?attr/actionBarTheme"-->
-    <!--        app:menu="@menu/menu_shortlisted" />-->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ShortlistedRestaurants"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ShortlistedButtonCol"
         android:layout_alignParentTop="true"
-        tools:listitem="@layout/shortlisted_item">
+        tools:listitem="@layout/item_shortlisted">
 
     </androidx.recyclerview.widget.RecyclerView>
 

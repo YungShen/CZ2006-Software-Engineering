@@ -10,11 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 
-// not sure what is this for
-import androidx.recyclerview.widget.DiffUtil
-import java.io.Serializable
-
-
 class CardStackAdapter(
     private var restaurants: MutableList<Restaurant> = mutableListOf()
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
@@ -35,9 +30,9 @@ class CardStackAdapter(
             .load(restaurant.url)
             .into(holder.photo)
         holder.itemView.setOnClickListener {
-            v -> v.context.startActivity(Intent(v.context, ScrollingActivity::class.java).putExtra("restaurant_to_pass",restaurant)
-        )
-
+            v ->
+            val intent = Intent(v.context, ScrollingActivity::class.java).putExtra("restaurant_to_pass",restaurant)
+            v.context.startActivity(intent)
         }
     }
 

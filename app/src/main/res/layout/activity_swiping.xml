@@ -5,17 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Main_Page">
-
-    <!--    <androidx.appcompat.widget.Toolbar-->
-    <!--        android:id="@+id/toolbar"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_alignParentTop="true"-->
-    <!--        android:background="?attr/colorPrimary"-->
-    <!--        android:minHeight="?attr/actionBarSize"-->
-    <!--        android:theme="?attr/actionBarTheme"-->
-    <!--        app:menu="@menu/menu_swiping" />-->
+    tools:context=".SwipingActivity">
 
     <Button
         android:id="@+id/ViewShortlistedButton"
@@ -98,14 +88,6 @@
         android:padding="4dp">
 
     </com.yuyakaido.android.cardstackview.CardStackView>
-
-    <!--    <include-->
-    <!--        layout="@layout/item_restaurant_card"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_above="@id/ShortlistButtonRow"-->
-    <!--        android:layout_below="@id/LocationClickable"-->
-    <!--        />-->
 
     <androidx.cardview.widget.CardView
         android:id="@+id/IncreaseRadiusCard"

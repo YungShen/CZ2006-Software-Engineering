@@ -7,23 +7,20 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.maps.model.LatLng;
 
-public class GetDirections extends AppCompatActivity {
-
-    private String destinationURL;
+public class GetDirectionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_get_directions);
-        getDirections();
-    }
 
-    public void getDirections() {
-        destinationURL = "http://maps.google.com/maps?saddr=" + mySettings.locationOfUser.latitude + "," + mySettings.locationOfUser.longitude + "&daddr=1.337773,103.6951003";
+        double lat = getIntent().getDoubleExtra("latitude", 1.337773);
+        double lng = getIntent().getDoubleExtra("longitude", 103.6951003);
+
+        String destinationURL = "http://maps.google.com/maps?saddr=" + mySettings.locationOfUser.latitude + "," + mySettings.locationOfUser.longitude + "&daddr="+lat+","+lng;
         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                 Uri.parse(destinationURL));
         startActivity(intent);
     }
-
 
 }

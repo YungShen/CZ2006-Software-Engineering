@@ -5,41 +5,38 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_shortlistedrestaurants.*
 import kotlin.random.Random
 
 class ShortlistedRestaurantsActivity : AppCompatActivity() {
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: ShortlistedRestaurantAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var shortlistedrestaurants = intent.getSerializableExtra("restaurant_list_to_pass")as ArrayList<Restaurant>
         setContentView(R.layout.activity_shortlistedrestaurants)
-
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = ShortlistedRestaurantAdapter(shortlistedrestaurants)
-        recyclerView = findViewById<RecyclerView>(R.id.ShortlistedRestaurants).apply {
+
+        val shortlistedRestaurants = intent.getSerializableExtra("restaurant_list_to_pass")as ArrayList<Restaurant>
+
+        val viewManager = LinearLayoutManager(this)
+        viewAdapter = ShortlistedRestaurantAdapter(shortlistedRestaurants)
+        ShortlistedRestaurants.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
 
         }
 
-        val clearAll = findViewById<Button>(R.id.ClearAllButton)
-        clearAll.setOnClickListener {
+        ClearAllButton.setOnClickListener {
             viewAdapter.clearAllRestaurant()
         }
 
-        val randomPick = findViewById<Button>(R.id.RandomPickButton)
-        randomPick.setOnClickListener {
-            if(shortlistedrestaurants.size != 0){
-                val randomInt = Random.nextInt(shortlistedrestaurants.size)
+        RandomPickButton.setOnClickListener {
+            if(shortlistedRestaurants.size != 0){
+                val randomInt = Random.nextInt(shortlistedRestaurants.size)
                 val intent = Intent(this, FinalActivity::class.java)
                     .putExtra("restaurant_to_final", viewAdapter.getRestaurants()[randomInt])
                 startActivity(intent)
@@ -56,8 +53,6 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
             true
         }
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }

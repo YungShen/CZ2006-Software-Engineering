@@ -1,30 +1,16 @@
 package com.example.myapplication
 
-import android.content.Context
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 
-class SingletonObjects constructor(context: Context){
-    companion object {
-        @Volatile
-        private var INSTANCE: SingletonObjects? = null
-        fun getInstance(context: Context) =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: SingletonObjects(context).also {
-                    INSTANCE = it
-                }
-            }
-    }
-    val requestQueue : RequestQueue by lazy {
-        Volley.newRequestQueue(context.applicationContext)
-    }
-}
-
+/*
+* This class provides support in using Google Places API
+* It creates JsonObjectRequest of the desired search request for the calling activity to put into volley RequestQueue
+* It also has function that transforms photo_reference into url (that could be used to get the photo from Places Photos API)
+*/
 class APIHelper {
 
     companion object{
@@ -55,13 +41,11 @@ class APIHelper {
             callback: (String)->Unit,
             nextPageToken: String): JsonObjectRequest {
 
-            val url: String
-            if(nextPageToken != ""){
-                url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=$API_KEY&pagetoken=$nextPageToken"
+            val url: String = if(nextPageToken != ""){
+                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key=$API_KEY&pagetoken=$nextPageToken"
             }else{
                 adjustToUserSettings()
-                url =
-                    "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
+                "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=$radius&keyword=$keyword&type=restaurant&key=$API_KEY"
             }
             Log.d("APIHelper.kt", "Performs search at $url")
 
@@ -135,7 +119,7 @@ class APIHelper {
             val placePhotos = mutableListOf<String>()
             return JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener() {
+                Response.Listener {
                         response -> if (response != null) {
 
                     if(response.has("error_message")){
@@ -161,7 +145,7 @@ class APIHelper {
             val url = "https://maps.googleapis.com/maps/api/place/details/json?place_id=$place_id&fields=international_phone_number,website&key=$API_KEY"
             return JsonObjectRequest(
                 Request.Method.GET, url, null,
-                Response.Listener() {
+                Response.Listener {
                         response -> if (response != null) {
 
                     if(response.has("error_message")){

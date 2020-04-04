@@ -13,48 +13,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GetDirections"></activity>
-        <activity
-            android:name=".ResetLinkActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ForgetPasswordActivity"
-            android:exported="true" />
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="true" />
-        <activity android:name=".Login">
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Main_Page"
-            android:exported="true" />
+            android:name=".GetDirectionsActivity" />
+        <activity
+            android:name=".ResetLinkActivity"/>
+        <activity
+            android:name=".ForgetPasswordActivity"/>
+        <activity
+            android:name=".RegisterActivity"/>
+        <activity
+            android:name=".SwipingActivity"/>
         <activity
             android:name=".SettingsActivity"
-            android:parentActivityName=".Main_Page" />
+            android:parentActivityName=".SwipingActivity" />
         <activity
             android:name=".ScrollingActivity"
-            android:parentActivityName=".Main_Page" />
+            android:parentActivityName=".SwipingActivity" />
         <activity
             android:name=".ShortlistedRestaurantsActivity"
-            android:parentActivityName=".Main_Page" />
+            android:parentActivityName=".SwipingActivity" />
         <activity
             android:name=".FinalActivity"
-            android:exported="true"
             android:parentActivityName=".ShortlistedRestaurantsActivity" />
         <activity
-            android:name=".MapsActivityCurrentPlace"
+            android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:parentActivityName=".Main_Page">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:parentActivityName=".SwipingActivity">
         </activity>
 
         <meta-data

@@ -9,15 +9,6 @@
     android:orientation="vertical"
     tools:context=".FinalActivity">
 
-    <!--        <androidx.appcompat.widget.Toolbar-->
-    <!--            android:id="@+id/FinalToolbar"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:background="?attr/colorPrimary"-->
-    <!--            android:minHeight="?attr/actionBarSize"-->
-    <!--            android:theme="?attr/actionBarTheme"-->
-    <!--            app:menu="@menu/menu_final" />-->
-
     <androidx.viewpager2.widget.ViewPager2
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/final_photo_pager"
@@ -34,8 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/button_direction"
-            android:onClick="sendMessage"/>
+            android:text="@string/button_direction" />
 
         <Button
             android:id="@+id/ReservationButton"

@@ -7,6 +7,6 @@ class ResetLinkActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.succesful_resetlink)
+        setContentView(R.layout.activity_reset_link)
     }
 }

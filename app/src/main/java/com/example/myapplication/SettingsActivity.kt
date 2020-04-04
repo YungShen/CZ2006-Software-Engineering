@@ -9,6 +9,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -24,26 +25,21 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_page_2)
-        val distance_value = findViewById<TextView>(R.id.DistanceValue)
-        distance_value.text=distance.toString()
+        setContentView(R.layout.activity_settings)
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val halalSwitch = findViewById<Switch>(R.id.HalalSwitch)
-        halalSwitch.isChecked = halal
-        val vegSwitch = findViewById<Switch>(R.id.VegetarianSwitch)
-        vegSwitch.isChecked = veg
-        halalSwitch.setOnCheckedChangeListener {
+        HalalSwitch.isChecked = halal
+        HalalSwitch.setOnCheckedChangeListener {
                 _, isChecked -> halal = isChecked
         }
-        vegSwitch.setOnCheckedChangeListener {
+        VegetarianSwitch.isChecked = veg
+        VegetarianSwitch.setOnCheckedChangeListener {
                 _, isChecked -> veg = isChecked
         }
+        DistanceValue.text=distance.toString()
 
-
-        val seek = findViewById<SeekBar>(R.id.DistanceSelector)
-        seek.progress = mySettings.radius
-        seek?.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
+        DistanceSelector.progress = mySettings.radius
+        DistanceSelector.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
             val radiusValue = findViewById<TextView>(R.id.DistanceValue)
             override fun onProgressChanged(seek: SeekBar?, progress: Int, fromUser: Boolean) {
                 if(progress < MIN_PROGRESS){
@@ -57,44 +53,27 @@ class SettingsActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seek: SeekBar) {}
         })
 
-        val logout = findViewById<Button>(R.id.LogoutButton)
-        logout.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
+        LogoutButton.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
             finish()
             startActivity(intent)
         }
-        val cancel = findViewById<Button>(R.id.CancelButton)
-        cancel.setOnClickListener {
+
+        CancelButton.setOnClickListener {
             onBackPressed()
         }
-        val save = findViewById<Button>(R.id.SaveButton)
-        save.setOnClickListener {
-            saveSettings()
+
+        SaveButton.setOnClickListener {
+
+            DatabaseHelper.saveSettings(halal, veg, distance)
             var settingsChanged = false
             if(halal != halalCopy || veg != vegCopy || distance != distanceCopy){
                 settingsChanged = true
             }
-            Log.d("SettingsActivity.kt", "settingsChanged passing to Main_Page: $settingsChanged")
             setResult(Activity.RESULT_OK, Intent().putExtra("settingsChanged", settingsChanged))
-            finish()
+            onBackPressed()
         }
 
-    }
-
-
-    private fun saveSettings(){
-        // save
-        val database = Firebase.database
-        val databaseUsers = database.getReference("Users")
-
-        databaseUsers.child(mySettings.uid).setValue(UserSettings(mySettings.uid, halal, veg, distance/1000))
-        mySettings.halal = halal
-        mySettings.vegetarian = veg
-        mySettings.radius = distance/1000
-
-
-        
-        // back to main page
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -103,8 +82,6 @@ class SettingsActivity : AppCompatActivity() {
             true
         }
         else -> {
-            // If we got here, the user's action was not recognized.
-            // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
     }

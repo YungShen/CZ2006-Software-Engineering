@@ -97,7 +97,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:background="#405DE6"
-        android:onClick="validateUser"
         android:text="@string/register"
         android:textColor="@color/colorInput"
         android:textSize="16sp" />
@@ -107,7 +106,6 @@
         android:layout_width="330dp"
         android:layout_height="45dp"
         android:background="@color/colorInput"
-        android:onClick="toLogin"
         android:text="Back to login"
         android:textColor="#405DE6"
         android:textSize="16sp" />

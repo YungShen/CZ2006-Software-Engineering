@@ -33,7 +33,7 @@ class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
 
     override fun getItemCount(): Int = photos.size
 
-    fun getItemUrlAt(position: Int) : String{
+    fun getItemAt(position: Int) : String{
         if(position >= photos.size){
             return ""
         }
@@ -45,7 +45,7 @@ class PhotoListAdapter : RecyclerView.Adapter<PhotoViewHolder>() {
 class PhotoViewHolder constructor(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
     constructor(parent: ViewGroup) :
-            this(LayoutInflater.from(parent.context).inflate(R.layout.photo_item, parent, false))
+            this(LayoutInflater.from(parent.context).inflate(R.layout.item_photo, parent, false))
 
     var photo: ImageView = itemView.findViewById(R.id.food_photo)
 

@@ -22,21 +22,9 @@ import com.android.volley.RequestQueue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.*
-import java.io.Serializable
+import kotlinx.android.synthetic.main.activity_swiping.*
 
-
-data class Restaurant(var place_id:String,
-                      val name: String,
-                      val url: String,
-                      val latitude: Double,
-                      val longitude: Double,
-                      val address: String,
-                      val price_level: Int,
-                      val rating: Double,
-                      val user_ratings_total: Int,
-                      val opening_now: Boolean) :Serializable
-
-class Main_Page : AppCompatActivity(), CardStackListener {
+class SwipingActivity : AppCompatActivity(), CardStackListener {
 
     private val SETTINGS_ACTIVITY_REQUEST_CODE = 0
     private val MAP_ACTIVITY_REQUEST_CODE = 1
@@ -47,7 +35,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     private val adapter by lazy { CardStackAdapter() }
     private lateinit var mQueue : RequestQueue
 
-    private var viewedRestaurants = mutableListOf<String>()
     private var shortlistedRestaurants = ArrayList<Restaurant>()
     private var restaurantsFromAPI = mutableListOf<Restaurant>()
     private var currentRestaurant = 0
@@ -74,9 +61,8 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setRestaurantCallback(nextPageToken: String){
-        Log.d("Main_Page.kt", "Current restaurantsFromAPI size: ${restaurantsFromAPI.size}")
         if(nextPageToken != ""){
-            Log.d("Main_Page.kt", "setRestaurantsCallback: added one more nearbySearchRequest to queue")
+            Log.d("SwipingActivity.kt", "setRestaurantsCallback: added one more nearbySearchRequest to queue")
             mQueue.add(APIHelper.nearbyPlacesRequest(
                 restaurantsFromAPI,
                 { setRestaurantCallback(it) },
@@ -94,7 +80,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun reSearch(){
-        Log.d("Main_Page.kt", "Perform Re-search")
+        Log.d("SwipingActivity", "Perform Re-search")
         restaurantsFromAPI.clear()
         currentRestaurant = 0
         mQueue.add(APIHelper.nearbyPlacesRequest(restaurantsFromAPI, { setRestaurantCallback(it) }, ""))
@@ -119,7 +105,6 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 val textView: TextView = findViewById(R.id.LocationText)
 
                 if(address != null && address != ""){
-                    Log.d("Main_Page.kt", "address is $address")
                     textView.text = address
                     reSearch()
                 }
@@ -127,12 +112,12 @@ class Main_Page : AppCompatActivity(), CardStackListener {
         }else if(requestCode == SHORTLISTED_ACTIVITY_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 val arr  = intent.getSerializableExtra("restaurant_list_to_pass_back")
-                if(arr != null){
-                    shortlistedRestaurants = arr as ArrayList<Restaurant>
-                }else{
-                    shortlistedRestaurants = ArrayList<Restaurant>()
-                }
-                Log.d("Main_Page.kt", "passed back shortlisted restaurant of length ${shortlistedRestaurants.size}")
+                shortlistedRestaurants =
+                    if(arr != null){
+                        arr as ArrayList<Restaurant>
+                    }else{
+                        ArrayList<Restaurant>()
+                    }
             }
         }
     }
@@ -147,18 +132,17 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             }
             if(!shortlistedPreviously){
                 shortlistedRestaurants.add(restaurantsFromAPI[currentRestaurant])
-                Log.d("Main_Page", "Shortlisted ${shortlistedRestaurants.last().name}")
+                Log.d("SwipingActivity", "Shortlisted ${shortlistedRestaurants.last().name}")
             }
         }
         if(direction == Direction.Top){
             val intent = Intent(this, FinalActivity::class.java).putExtra("restaurant_to_final",restaurantsFromAPI[currentRestaurant])
             startActivity(intent)
         }
-        viewedRestaurants.add(restaurantsFromAPI[currentRestaurant].place_id)
         currentRestaurant++
 
         if(currentRestaurant == restaurantsFromAPI.size){
-            Log.d("Main_Page.kt", "No more restaurants")
+            Log.d("SwipingActivity.kt", "No more restaurants")
             findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = VISIBLE
         }
     }
@@ -166,20 +150,16 @@ class Main_Page : AppCompatActivity(), CardStackListener {
     override fun onCardDragging(direction: Direction, ratio: Float) {
 //        Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
-
     override fun onCardRewound() {
 //        Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
     }
-
     override fun onCardCanceled() {
 //        Log.d("CardStackView", "onCardCanceled: ${manager.topPosition}")
     }
-
     override fun onCardAppeared(view: View, position: Int) {
 //        val textView = view.findViewById<TextView>(R.id.item_name)
 //        Log.d("CardStackView", "onCardAppeared: ($position) ${textView.text}")
     }
-
     override fun onCardDisappeared(view: View, position: Int) {
 //        val textView = view.findViewById<TextView>(R.id.item_name)
 //        Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
@@ -215,36 +195,30 @@ class Main_Page : AppCompatActivity(), CardStackListener {
             startActivityForResult(intent, SHORTLISTED_ACTIVITY_REQUEST_CODE)
         }
 
-        var button = findViewById<Button>(R.id.SettingsButton)
-        button.setOnClickListener {
+        SettingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST_CODE)
         }
-        val clickableCard = findViewById<CardView>(R.id.SetLocationCard)
-        clickableCard.setOnClickListener {
-            val intent = Intent(this, MapsActivityCurrentPlace::class.java)
+        SetLocationCard.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
             startActivityForResult(intent, MAP_ACTIVITY_REQUEST_CODE)
         }
-        button = findViewById(R.id.ViewShortlistedButton)
-        button.setOnClickListener {
+        ViewShortlistedButton.setOnClickListener {
             goToShortlisted()
         }
-        button = findViewById(R.id.NotIncreaseRadiusButton)
-        button.setOnClickListener {
+        NotIncreaseRadiusButton.setOnClickListener {
             goToShortlisted()
         }
-        button = findViewById(R.id.IncreaseRadiusButton)
-        button.setOnClickListener {
+        IncreaseRadiusButton.setOnClickListener {
             if(mySettings.radius < 5){
                 mySettings.radius += 1
-                Toast.makeText(this@Main_Page,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SwipingActivity,"Successfully increased your search radius by 1km!", Toast.LENGTH_LONG).show()
                 reSearch()
             }else{
-                Toast.makeText(this@Main_Page,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SwipingActivity,"Your already have the largest search radius!", Toast.LENGTH_LONG).show()
             }
         }
-        var imageButton = findViewById<ImageButton>(R.id.DiscardButton)
-        imageButton.setOnClickListener {
+        DiscardButton.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()
                     .setDirection(Direction.Left)
@@ -255,8 +229,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 cardStackView.swipe()
             }
         }
-        imageButton = findViewById(R.id.ShortlistButton)
-        imageButton.setOnClickListener {
+        ShortlistButton.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()
                     .setDirection(Direction.Right)
@@ -267,8 +240,7 @@ class Main_Page : AppCompatActivity(), CardStackListener {
                 cardStackView.swipe()
             }
         }
-        button = findViewById(R.id.SuperlikeButton)
-        button.setOnClickListener {
+        SuperlikeButton.setOnClickListener {
             if(cardStackView.adapter?.itemCount != 0){
                 val setting = SwipeAnimationSetting.Builder()
                     .setDirection(Direction.Top)
@@ -282,19 +254,19 @@ class Main_Page : AppCompatActivity(), CardStackListener {
 
     }
 
-    val database = Firebase.database
-    val databaseUR = database.getReference("UsersRestaurant")
-
-    //function to add restaurant to shortlist
-    fun shortlistRestaurant(resId: String){
-        val key: String? = databaseUR.push().key
-        databaseUR.child(mySettings.uid).child("Shortlist").child(key!!).setValue(resId)
-        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
-    }
-
-    fun rejectRestaurant(resId: String){
-        val key: String? = databaseUR.push().key
-        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
-    }
+//    val database = Firebase.database
+//    val databaseUR = database.getReference("UsersRestaurant")
+//
+//    //function to add restaurant to shortlist
+//    fun shortlistRestaurant(resId: String){
+//        val key: String? = databaseUR.push().key
+//        databaseUR.child(mySettings.uid).child("Shortlist").child(key!!).setValue(resId)
+//        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
+//    }
+//
+//    fun rejectRestaurant(resId: String){
+//        val key: String? = databaseUR.push().key
+//        databaseUR.child(mySettings.uid).child("Viewed").child(key!!).setValue(resId)
+//    }
 
 }

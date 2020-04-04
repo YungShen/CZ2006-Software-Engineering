@@ -10,26 +10,22 @@ import kotlinx.android.synthetic.main.activity_forgetpassword.*
 
 class ForgetPasswordActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forgetpassword)
 
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
-
         ResetButton.setOnClickListener{
-            performReset(it)
+            performReset()
         }
 
         LoginButton.setOnClickListener{
-            toLogin(it)
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    private fun performReset(view: View) {
+    private fun performReset() {
         val email = Email.text.toString()
 
         if (email.isEmpty()){
@@ -37,17 +33,16 @@ class ForgetPasswordActivity : AppCompatActivity() {
             return
         }
 
-        auth.sendPasswordResetEmail(email).addOnCompleteListener {
-            if (it.isSuccessful){
-                Toast.makeText(this, "Reset password link had sent to your email", Toast.LENGTH_SHORT).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Failed to send password to email: ${it.message}", Toast.LENGTH_SHORT).show()
-        }
+        DatabaseHelper.passwordReset(email, { successCallback() }, { failureCallback(it) })
+
     }
 
-    fun toLogin(view: View){
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
+    private fun successCallback(){
+        Toast.makeText(this@ForgetPasswordActivity, "Reset password link had sent to your email", Toast.LENGTH_SHORT).show()
     }
+
+    private fun failureCallback(exception : Exception){
+        Toast.makeText(this@ForgetPasswordActivity, "Failed to send password to email: ${exception.message}", Toast.LENGTH_SHORT).show()
+    }
+
 }
