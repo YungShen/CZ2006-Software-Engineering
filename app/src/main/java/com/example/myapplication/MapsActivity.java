@@ -241,7 +241,12 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     private void ResetMarker(){
-        userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
+        if (mySettings.locationOfUser == null) {
+            userCoordinate = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+        }
+        else {
+            userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
+        }
         userLocation = mMap.addMarker(new MarkerOptions()
                 .position(userCoordinate)
                 .draggable(true));
