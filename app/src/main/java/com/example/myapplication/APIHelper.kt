@@ -64,7 +64,9 @@ class APIHelper {
                         val restaurant = results.getJSONObject(i)
                         val name = restaurant.getString("name")
                         val place_id = restaurant.getString("place_id")
+                        if (restaurant.has("vicinity")){
                         val address = restaurant.getString("vicinity")
+                        }
                         val location = restaurant.getJSONObject("geometry").getJSONObject("location")
                         val latitude = location.getDouble("lat")
                         val longitude = location.getDouble("lng")
@@ -96,6 +98,7 @@ class APIHelper {
                             }
                         }
 
+                        val address = ""
                         restaurantsFromAPI.add(
                             Restaurant(name = name, place_id = place_id, address = address,
                                 price_level = price_level, rating = rating, user_ratings_total = user_ratings_total,
