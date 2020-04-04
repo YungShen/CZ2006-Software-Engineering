@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -86,14 +84,6 @@ public class MapsActivity extends AppCompatActivity implements
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
-    // Used for selecting the current place.
-    private static final int M_MAX_ENTRIES = 5;
-    private String[] mLikelyPlaceNames;
-    private String[] mLikelyPlaceAddresses;
-    private List[] mLikelyPlaceAttributions;
-    private LatLng[] mLikelyPlaceLatLngs;
-    private List[] mLikelyPlaceTypes;
-
     //Marker and User Coordinate
     protected Marker userLocation;
     protected LatLng userCoordinate;
@@ -146,25 +136,6 @@ public class MapsActivity extends AppCompatActivity implements
         }
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.current_place_menu, menu);
-        return true;
-    }*/
-
-    /*    *//**
-     * Handles a click on the menu option to get a place.
-     * @param item The menu item to handle.
-     * @return Boolean.
-     *//*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.option_get_place) {
-            showCurrentPlace();
-        }
-        return true;
-    }*/
-
     /**
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
@@ -172,9 +143,6 @@ public class MapsActivity extends AppCompatActivity implements
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
-        //Marker Activity
-        // Use a custom info window adapter to handle multiple lines of text in the
-        // info window contents.
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
             @Override
@@ -273,7 +241,7 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     private void ResetMarker(){
-        userCoordinate = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+        userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
         userLocation = mMap.addMarker(new MarkerOptions()
                 .position(userCoordinate)
                 .draggable(true));
@@ -286,10 +254,6 @@ public class MapsActivity extends AppCompatActivity implements
      * Gets the current location of the device, and positions the map's camera.
      */
     private void getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
         try {
             if (mLocationPermissionGranted) {
                 final Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
@@ -322,11 +286,6 @@ public class MapsActivity extends AppCompatActivity implements
      * Prompts the user for permission to use the device location.
      */
     private void getLocationPermission() {
-        /*
-         * Request location permission, so that we can get the location of the
-         * device. The result of the permission request is handled by a callback,
-         * onRequestPermissionsResult.
-         */
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -381,18 +340,13 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
-        //Do nothing
-    }
+    public void onMarkerDragStart(Marker marker) {}
 
     @Override
     public void onMarkerDrag(Marker marker) {
         userCoordinate = marker.getPosition();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 new LatLng(userCoordinate.latitude, userCoordinate.longitude), DEFAULT_ZOOM));
-        /*EditText etPlace = (EditText) title.getView().findViewById(R.id.autocomplete_fragment);
-        etPlace.setHint(address);*/
-
     }
 
     @Override
@@ -449,19 +403,13 @@ public class MapsActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        return true;
-    }
+    public boolean onMarkerClick(Marker marker) {return true;}
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
-        //Do nothing
-    }
+    public void onInfoWindowClick(Marker marker) {}
 
     @Override
-    public void onInfoWindowClose(Marker marker) {
-        //Do nothing
-    }
+    public void onInfoWindowClose(Marker marker) {}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
