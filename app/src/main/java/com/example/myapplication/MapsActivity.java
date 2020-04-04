@@ -247,6 +247,7 @@ public class MapsActivity extends AppCompatActivity implements
                         .draggable(true));
                 System.out.println(latlng);
 
+                userCoordinate = userLocation.getPosition();
             }
         });
 
