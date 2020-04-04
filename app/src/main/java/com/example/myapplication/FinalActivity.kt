@@ -64,7 +64,7 @@ class FinalActivity : AppCompatActivity() {
             val temp:LatLng =  LatLng(restaurant.latitude,restaurant.longitude)
             mySettings.locationOfRestaurant = temp
             val destinationURL =
-                "http://maps.google.com/maps?saddr=" + mySettings.locationOfUser.latitude + "," + mySettings.locationOfUser.longitude + "&daddr=" + lat + "," + lng
+                "http://maps.google.com/maps?saddr=" + mySettings.locationOfUser.latitude + "," + mySettings.locationOfUser.longitude + "&daddr=" + mySettings.locationOfRestaurant.latitude + "," + mySettings.locationOfRestaurant.longitude
             val intent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(destinationURL)
