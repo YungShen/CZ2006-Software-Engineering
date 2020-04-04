@@ -152,7 +152,7 @@ public class MapsActivity extends AppCompatActivity implements
         return true;
     }*/
 
-/*    *//**
+    /*    *//**
      * Handles a click on the menu option to get a place.
      * @param item The menu item to handle.
      * @return Boolean.
@@ -245,6 +245,16 @@ public class MapsActivity extends AppCompatActivity implements
         else {
             userCoordinate = new LatLng(mySettings.locationOfUser.latitude, mySettings.locationOfUser.longitude);
         }
+        userLocation = mMap.addMarker(new MarkerOptions()
+                .position(userCoordinate)
+                .draggable(true));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(userCoordinate.latitude,
+                        userCoordinate.longitude), DEFAULT_ZOOM));
+    }
+
+    private void ResetMarker(){
+        userCoordinate = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
         userLocation = mMap.addMarker(new MarkerOptions()
                 .position(userCoordinate)
                 .draggable(true));
@@ -373,10 +383,10 @@ public class MapsActivity extends AppCompatActivity implements
 
     // Action to be performed when "Confirm" is clicked
     public void confirmLocation(View view) throws IOException {
-            mySettings.locationOfUser = userCoordinate;
-            Geocoder geocoder;
-            List<Address> addresses;
-            geocoder = new Geocoder(this, Locale.getDefault());
+        mySettings.locationOfUser = userCoordinate;
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
         try{
             addresses = geocoder.getFromLocation(userCoordinate.latitude, userCoordinate.longitude, 1);
             address = addresses.get(0).getAddressLine(0);
@@ -412,7 +422,7 @@ public class MapsActivity extends AppCompatActivity implements
         }
         // Clear the map because we don't want duplicates of the markers.
         mMap.clear();
-        InitializeMarker();
+        ResetMarker();
         LatLngBounds bounds = new LatLngBounds.Builder()
                 .include(userLocation.getPosition())
                 .build();
