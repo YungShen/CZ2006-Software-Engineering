@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_shortlistedrestaurants.*
 import kotlin.random.Random
 
@@ -27,7 +26,6 @@ class ShortlistedRestaurantsActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
-
         }
 
         ClearAllButton.setOnClickListener {

@@ -3,20 +3,12 @@ package com.example.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_login.LoginButton
 
 class LoginActivity : AppCompatActivity() {
 
-//    private lateinit var auth: FirebaseAuth
-//    lateinit var currentSettings: UserSettings
-//    private lateinit var ref: DatabaseReference
-//
     companion object {
         const val TAG = "Login"
     }
@@ -25,12 +17,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        // Initialize Firebase Auth
-//        auth = FirebaseAuth.getInstance()
-
-
         LoginButton.setOnClickListener {
-            performLogin(it)
+            performLogin()
         }
         SignUpButton.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
@@ -43,7 +31,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun performLogin(view: View) {
+    private fun performLogin() {
         val email = loginEmail.text.toString()
         val password = loginPassword.text.toString()
 

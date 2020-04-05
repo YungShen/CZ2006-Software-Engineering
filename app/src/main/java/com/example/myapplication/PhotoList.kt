@@ -11,9 +11,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapplication.DatabaseHelper.Companion.downvotePhoto
-import com.example.myapplication.DatabaseHelper.Companion.getVote
-import com.example.myapplication.DatabaseHelper.Companion.upvotePhoto
 
 class PhotoList : Fragment() {
     private lateinit var adapter: PhotoListAdapter
@@ -50,7 +47,7 @@ class PhotoList : Fragment() {
                 photoRefs.shuffle()
                 // dynamically insert to the adapter if the vote is not negative
                 photoRefs.forEach { item ->
-                    getVote(place_id, item) { numVote, photoRef -> addToAdapterCallback(numVote, photoRef) }
+                    DatabaseHelper.getVote(place_id, item) { numVote, photoRef -> addToAdapterCallback(numVote, photoRef) }
                 }
             }
         })
@@ -58,14 +55,14 @@ class PhotoList : Fragment() {
         val upvote = view.findViewById<Button>(R.id.UpvoteButton)
         upvote.setOnClickListener {
             val photoRef = getCurPhotoReference()
-            upvotePhoto(place_id, photoRef)
+            DatabaseHelper.upvotePhoto(place_id, photoRef)
             Toast.makeText(activity, "Your voting response will be recorded.",
                 Toast.LENGTH_SHORT).show()
         }
         val downvote = view.findViewById<Button>(R.id.DownvoteButton)
         downvote.setOnClickListener{
             val photoRef = getCurPhotoReference()
-            downvotePhoto(place_id, photoRef)
+            DatabaseHelper.downvotePhoto(place_id, photoRef)
             Toast.makeText(activity, "Your voting response will be recorded.",
                 Toast.LENGTH_SHORT).show()
         }

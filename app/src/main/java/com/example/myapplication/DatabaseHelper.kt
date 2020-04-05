@@ -1,18 +1,15 @@
 package com.example.myapplication
 
 import android.util.Log
-import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_register.*
 
 class DatabaseHelper{
     companion object{
 
-        private lateinit var ref: DatabaseReference
         private val database = Firebase.database
         private val databaseRes = database.getReference("Restaurant")
 
@@ -86,47 +83,39 @@ class DatabaseHelper{
                     }
 
                     //retrieve user settings
-                    val refUser = FirebaseDatabase.getInstance().getReference("Users")
+                    if(it.result?.user?.uid != null){
+                        val refUser = FirebaseDatabase.getInstance().getReference("Users").child(it.result!!.user!!.uid)
+                        refUser.addValueEventListener(object : ValueEventListener {
 
-                    //retrieve settings listener
-                    refUser.addValueEventListener(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                if(dataSnapshot!!.exists()) {
+                                    val currentSettings = dataSnapshot.getValue(UserSettings::class.java)!!
+                                    mySettings.radius = currentSettings.radius
+                                    mySettings.halal = currentSettings.halal
+                                    mySettings.uid = currentSettings.uid
+                                    mySettings.vegetarian = currentSettings.vegetarian
 
-                        override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                            Log.w(LoginActivity.TAG, "stage 1")
-                            if(dataSnapshot!!.exists()) {
-//                                Log.w(LoginActivity.TAG, "stage 2")
-                                for (u in dataSnapshot.children){
-//                                    Log.w(LoginActivity.TAG, "stage $u")
-                                    if (u.key == it.result?.user?.uid) {
-//                                        Log.w(LoginActivity.TAG, "stage 4")
-                                        val currentSettings = u.getValue(UserSettings::class.java)!!
-                                        mySettings.radius = currentSettings.radius
-                                        mySettings.halal = currentSettings.halal
-                                        mySettings.uid = currentSettings.uid
-                                        mySettings.vegetarian = currentSettings.vegetarian
+                                    Log.w(LoginActivity.TAG, "user settings retrieved")
 
-                                        Log.w(LoginActivity.TAG, "user settings retrieved")
-
-                                        Log.w(LoginActivity.TAG, "halal ${currentSettings.halal}")
-                                        Log.w(LoginActivity.TAG, "veg ${currentSettings.vegetarian}")
-                                        Log.w(LoginActivity.TAG, "radius ${currentSettings.radius}")
-                                    }
+                                    Log.w(LoginActivity.TAG, "halal ${currentSettings.halal}")
+                                    Log.w(LoginActivity.TAG, "veg ${currentSettings.vegetarian}")
+                                    Log.w(LoginActivity.TAG, "radius ${currentSettings.radius}")
                                 }
                             }
-                        }
 
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            // Getting Post failed, log a message
-                            Log.w(LoginActivity.TAG, "settings:onCancelled", databaseError.toException())
-                            // ...
-                        }
-                    })
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                // Getting Post failed, log a message
+                                Log.w(LoginActivity.TAG, "settings:onCancelled", databaseError.toException())
+                                // ...
+                            }
+                        })
+
+                    }
 
                     successCallback()
 
                 }
                 .addOnFailureListener {
-//                    Toast.makeText(this, "Failed to log in: ", Toast.LENGTH_SHORT).show()
                     failureCallback("Failed to log in: ${it.message}")
                 }
         }

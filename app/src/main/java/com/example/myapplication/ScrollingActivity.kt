@@ -26,36 +26,6 @@ class ScrollingActivity : AppCompatActivity() {
         })
 
         setupRestaurantText(restaurant)
-
-
-//        val r_name = findViewById<TextView>(R.id.RestaurantName)
-//        r_name.text=restaurant.name
-//        val r_address = findViewById<TextView>(R.id.RestaurantAddress)
-//        r_address.text=restaurant.address
-//
-//        val r_rating = findViewById<RatingBar>(R.id.RestaurantRating)
-//        r_rating.rating =restaurant.rating.toFloat()
-//        val r_opening = findViewById<TextView>(R.id.RestaurantOpeningHours)
-//        if(restaurant.opening_now)
-//        {
-//            r_opening.text="Opening Now"
-//        }
-//        else
-//        {
-//            r_opening.text="Closes"
-//        }
-//        val r_pricing = findViewById<TextView>(R.id.RestaurantPricing)
-//        if(restaurant.price_level==-1)
-//        {
-//            r_pricing.text="Price: Not Applicable"
-//        }
-//        else
-//        {
-//            r_pricing.text="$".repeat(restaurant.price_level)
-//        }
-//        val phoneView = findViewById<TextView>(R.id.PhoneNumber)
-//        val websiteView = findViewById<TextView>(R.id.RestaurantWebsite)
-
     }
 
     private fun setupRestaurantText(restaurant: Restaurant){

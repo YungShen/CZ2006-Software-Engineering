@@ -160,8 +160,8 @@ public class MapsActivity extends AppCompatActivity implements
                 TextView title = infoWindow.findViewById(R.id.title);
                 title.setText(marker.getTitle());
 
-                TextView snippet = infoWindow.findViewById(R.id.snippet);
-                snippet.setText(marker.getSnippet());
+//                TextView snippet = infoWindow.findViewById(R.id.snippet);
+//                snippet.setText(marker.getSnippet());
 
                 return infoWindow;
             }

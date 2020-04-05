@@ -10,8 +10,6 @@ import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -19,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.android.volley.RequestQueue
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import com.yuyakaido.android.cardstackview.*
 import kotlinx.android.synthetic.main.activity_swiping.*
 
@@ -32,7 +28,7 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
 
     private val cardStackView by lazy { findViewById<CardStackView>(R.id.card_stack_view) }
     private val manager by lazy { CardStackLayoutManager(this, this) }
-    private val adapter by lazy { CardStackAdapter() }
+    private val adapter by lazy { RestaurantCardStackAdapter() }
     private lateinit var mQueue : RequestQueue
 
     private var shortlistedRestaurants = ArrayList<Restaurant>()
@@ -45,7 +41,7 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swiping)
 
-        findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = INVISIBLE
+        IncreaseRadiusCard.visibility = INVISIBLE
         setupButtons()
         setupCardStackView()
 
@@ -55,8 +51,7 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
             { setRestaurantCallback(it) },
             ""))
         val userAddress = intent.getStringExtra("user_address")
-        val textView: TextView = findViewById(R.id.LocationText)
-        textView.text = userAddress
+        LocationText.text = userAddress
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -72,8 +67,7 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
             // set all restaurants one shot
             adapter.setRestaurants(restaurantsFromAPI)
             if(restaurantsFromAPI.size == 0){
-                val increaseRadiusCard = findViewById<CardView>(R.id.IncreaseRadiusCard)
-                increaseRadiusCard.visibility = VISIBLE
+                IncreaseRadiusCard.visibility = VISIBLE
             }
         }
     }
@@ -112,12 +106,9 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
         }else if(requestCode == SHORTLISTED_ACTIVITY_REQUEST_CODE){
             if(resultCode == Activity.RESULT_OK){
                 val arr  = intent.getSerializableExtra("restaurant_list_to_pass_back")
-                shortlistedRestaurants =
-                    if(arr != null){
-                        arr as ArrayList<Restaurant>
-                    }else{
-                        ArrayList<Restaurant>()
-                    }
+                if(arr != null){
+                    shortlistedRestaurants = arr as ArrayList<Restaurant>
+                }
             }
         }
     }
@@ -143,7 +134,7 @@ class SwipingActivity : AppCompatActivity(), CardStackListener {
 
         if(currentRestaurant == restaurantsFromAPI.size){
             Log.d("SwipingActivity.kt", "No more restaurants")
-            findViewById<CardView>(R.id.IncreaseRadiusCard).visibility = VISIBLE
+            IncreaseRadiusCard.visibility = VISIBLE
         }
     }
 
