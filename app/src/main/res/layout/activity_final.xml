@@ -37,8 +37,17 @@
             />
     </LinearLayout>
 
-    <include
-        layout="@layout/restaurant_text"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:scrollbarStyle="outsideInset">
+
+        <include
+            layout="@layout/restaurant_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
 </LinearLayout>
